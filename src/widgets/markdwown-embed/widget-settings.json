@@ -1,0 +1,17 @@
+{
+  "title": "Markdown embed widget settings",
+  "type": "object",
+  "properties": {
+    "entityId": {
+      "type": "string",
+      "title": "Issue/Article ID",
+      "description": "The ID of the issue or article to embed."
+    },
+    "sectionTitle": {
+      "type": "string",
+      "title": "Section title",
+      "description": "The title of the section to embed."
+    }
+  },
+  "required": ["entityId", "sectionTitle"]
+}

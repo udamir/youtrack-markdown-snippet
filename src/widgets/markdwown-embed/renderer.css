@@ -1,0 +1,47 @@
+.markdown-embed-loader {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.markdown-embed-error {
+  color: #d93025;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: rgba(217, 48, 37, 0.1);
+  margin: 16px;
+}
+
+.markdown-embed-empty {
+  color: #5f6368;
+  text-align: center;
+  padding: 24px;
+}
+
+.markdown-embed-content {
+  padding: 16px;
+}
+
+.markdown-header {
+  border-bottom: 1px solid #e8eaed;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.markdown-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}

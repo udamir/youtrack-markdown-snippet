@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/youtrack-app.json",
+  "name": "md-embed",
+  "title": "Markdown embed widget",
+  "description": "Youtrack widget allows to embed article/issue parts into markdown content",
+  "vendor": {
+    "name": "Damir Yusipov",
+    "url": "https://github.com/udamir"
+  },
+  "version": "1.0.0",
+  "icon": "icon.svg",
+  "minYouTrackVersion": "2024.3.0",
+  "changeNotes": "https://github.com/udamir/youtrack-widget-md-embed/releases",
+  "url": "https://github.com/udamir/youtrack-widget-md-embed",
+  "widgets": [
+    {
+      "key": "md-embed",
+      "name": "Markdown embed widget",
+      "indexPath": "markdwown-embed/index.html",
+      "extensionPoint": "MARKDOWN",
+      "iconPath": "markdwown-embed/widget-icon.svg",
+      "description": "Embed article/issue parts into markdown content",
+      "settingsSchemaPath": "markdwown-embed/widget-settings.json"
+    }
+  ]
+}
