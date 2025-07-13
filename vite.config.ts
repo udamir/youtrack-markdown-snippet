@@ -37,15 +37,26 @@ export default defineConfig({
   base: '',
   publicDir: 'public',
   build: {
+    minify: 'terser',
+    cssCodeSplit: true,
+    sourcemap: false,
     outDir: '../dist',
     emptyOutDir: true,
     copyPublicDir: false,
     target: ['es2022'],
     assetsDir: 'widgets/assets',
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
         // List every widget entry point here
         markdownEmbed: resolve(__dirname, 'src/widgets/markdwown-embed/index.html'),
+      },
+      output: {
+        manualChunks: {
+          'react': ['react', 'react-dom'],
+          'markdown': ['markdown-it'],
+          'highlighting': ['highlight.js'],
+        }
       }
     }
   }
