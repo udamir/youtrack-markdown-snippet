@@ -14,6 +14,7 @@ import { fetchEntityContent, getEntityTypeById, isValidEntityId } from '../../ut
 import { RendererComponent } from './renderer';
 
 import './config.css';
+import { transformContent } from './utils';
 
 export interface WidgetConfig {
   entityId: string;
@@ -46,10 +47,10 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
     
     // If a section is selected and it's not empty (empty string is "All content" option)
     if (sectionTitle && sectionTitle.trim() !== '') {
-      setContent(getSectionContent(rawContent, sectionTitle));
+      setContent(getSectionContent(rawContent || '', sectionTitle));
     } else {
       // Otherwise show all content
-      setContent(rawContent);
+      setContent(rawContent || '');
     }
   }, [rawContent, sectionTitle]);
 
@@ -69,7 +70,7 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
     const entityType = getEntityTypeById(entityId);
 
     // Fetch content from the API
-    const { content, error } = await fetchEntityContent(entityId, youtrack);
+    const { content, attachments, error } = await fetchEntityContent(entityId, youtrack);
       
     if (error) {
       setError(`Failed to fetch ${entityType}: ${error.message || String(error)}`);
@@ -81,7 +82,7 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
     }
     
     // Store raw content for later use
-    setRawContent(content);
+    setRawContent(transformContent(content, attachments));
           
     // Parse markdown sections and update state
     const parsedSections = parseMarkdownSections(content);

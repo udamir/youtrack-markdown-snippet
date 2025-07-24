@@ -9,6 +9,7 @@ import { ConfigComponent, type WidgetConfig } from './config';
 import { RendererComponent } from './renderer';
 
 import './app.css';
+import { transformContent } from './utils';
 
 // YTApp is already declared in globals
 
@@ -29,7 +30,7 @@ export const App: React.FC = () => {
     setError(null);
     
     // Determine the entity type by ID format
-    const { summary, content, error } = await fetchEntityContent(configData.entityId, youtrackRef.current);
+    const { summary, content, attachments, error } = await fetchEntityContent(configData.entityId, youtrackRef.current);
     
     if (error) {
       setError(`Failed to fetch content: ${error.message || String(error)}`);
@@ -37,12 +38,14 @@ export const App: React.FC = () => {
       return;
     }
     
+    const transformedContent = transformContent(content, attachments);
+
     // Update state with the content
     if (configData.sectionTitle) {
       // Parse markdown to get sections
-      setContent(getSectionContent(content, configData.sectionTitle));
+      setContent(getSectionContent(transformedContent, configData.sectionTitle));
     } else {
-      setContent(content);
+      setContent(transformedContent);
     }
     
     // Create a title that includes the section name if specified

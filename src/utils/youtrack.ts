@@ -25,7 +25,6 @@ export const getEntityTypeById = (id: string): "issue" | "article" => {
   return articleId ? "article" : "issue"
 }
 
-
 /**
  * Returns the URL for a given entity ID
  * @param id YouTrack entity ID
@@ -42,26 +41,42 @@ export const getEntityUrl = (id: string): string => {
  * @param youtrack YouTrack client instance
  * @returns Tuple of [content, error]
  */
-export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): Promise<{ summary: string, content: string, error: Error | null }> => {
+export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): Promise<{ summary: string, content: string, attachments: Record<string, string>, error: Error | null }> => {
   const entityType = getEntityTypeById(entityId);
   
   if (entityType === 'issue') {
-    const [issue, error] = await tryCatch(youtrack.Issues.getIssueById(entityId, {fields: 'summary,description'}));
+    const [issue, error] = await tryCatch(youtrack.Issues.getIssueById(entityId, {fields: 'summary,description,attachments(id,url,name)'}));
     return { 
       summary: issue?.summary ?? '', 
       content: issue?.description ?? '', 
+      attachments: issue?.attachments.reduce(
+        (acc, { name, url }) => {
+          if (!name || !url) return acc
+          acc[name] = url || ""
+          return acc
+        },
+        {} as Record<string, string>,
+      ) ?? {},
       error
     };
   }  
   
   if (entityType === 'article') {
-    const [article, error] = await tryCatch(youtrack.Articles.getArticle(entityId, {fields: 'summary,content'}));
+    const [article, error] = await tryCatch(youtrack.Articles.getArticle(entityId, {fields: 'summary,content,attachments(id,url,name)'}));
     return { 
       summary: article?.summary ?? '', 
       content: article?.content ?? '', 
+      attachments: article?.attachments.reduce(
+        (acc, { name, url }) => {
+          if (!name || !url) return acc
+          acc[name] = url || ""
+          return acc
+        },
+        {} as Record<string, string>,
+      ) ?? {},
       error
     };
   }
 
-  return { summary: '', content: '', error: new Error('Invalid entity type') };
+  return { summary: '', content: '', attachments: {}, error: new Error('Invalid entity type') };
 }

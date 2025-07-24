@@ -1,47 +1,102 @@
+/* YouTrack-aligned CSS Variables */
+.markdown-embed-widget {
+  --ring-unit: 8px;
+  --ring-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ring-font-size: 13px;
+  --ring-line-height: 20px;
+  --content-font-size: 16px;
+  --content-line-height: 24px;
+  --side-spacing: calc(var(--ring-unit) * 2);
+}
+
+.compactUiMode .markdown-embed-widget {
+  --content-font-size: 14px;
+  --content-line-height: var(--ring-line-height);
+  --smaller-side-spacing: calc(var(--side-spacing) - 2px);
+}
+
 .markdown-embed-loader {
   display: flex;
   justify-content: center;
-  padding: 24px 0;
+  padding: calc(var(--ring-unit) * 3) 0;
+  font-family: var(--ring-font-family);
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
 }
 
 .markdown-embed-error {
   color: #d93025;
-  padding: 16px;
+  padding: calc(var(--ring-unit) * 2);
   border-radius: 4px;
   background-color: rgba(217, 48, 37, 0.1);
-  margin: 16px;
+  margin: calc(var(--ring-unit) * 2);
+  font-family: var(--ring-font-family);
+  font-size: var(--content-font-size);
+  line-height: var(--content-line-height);
 }
 
 .markdown-embed-empty {
   color: #5f6368;
   text-align: center;
-  padding: 24px;
+  padding: calc(var(--ring-unit) * 3);
+  font-family: var(--ring-font-family);
+  font-size: var(--content-font-size);
+  line-height: var(--content-line-height);
 }
 
 .markdown-embed-content {
-  padding: 16px;
+  padding: 0 calc(var(--ring-unit) * 4);
+  word-break: break-word;
+  font-family: var(--ring-font-family);
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
 }
 
 .markdown-header {
   border-bottom: 1px solid #e8eaed;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
+  padding-bottom: var(--ring-unit);
+  margin-bottom: calc(var(--ring-unit) * 2);
 }
 
 .markdown-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 500;
+  font-family: var(--ring-font-family);
 }
 
 .markdown-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  word-wrap: break-word;
+  font-family: var(--ring-font-family);
+  font-size: var(--content-font-size);
+  line-height: var(--content-line-height);
+  margin: var(--ring-unit) 0;
+  word-break: break-word;
 }
 
 .markdown-body pre {
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+/* YouTrack-aligned table styles */
+.markdown-body table {
+  border-collapse: collapse;
+  min-width: 50%;
+  margin-bottom: var(--ring-unit);
+  table-layout: fixed;
+  display: table;
+  box-sizing: border-box;
+  border-spacing: 2px;
+  border-color: gray;
+}
+
+.markdown-body .table-wrapper {
+  min-width: 100%;
+  margin-bottom: 0;
+}
+
+.markdown-body .table-wrapper > table {
+  min-width: 100%;
+  margin-bottom: 0;
 }

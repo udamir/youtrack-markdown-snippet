@@ -1,8 +1,12 @@
+import markdownitTaskLists from 'markdown-it-task-lists';
+import mermaid, { type MermaidConfig } from 'mermaid';
+import markdownItMultimdTable from 'markdown-it-multimd-table'
 import React, { useMemo } from 'react';
 import type { FC } from 'react';
 import LoaderInline from '@jetbrains/ring-ui-built/components/loader-inline/loader-inline';
 import Markdown from '@jetbrains/ring-ui-built/components/markdown/markdown';
 import MarkdownIt from 'markdown-it';
+
 import highlightJs from 'highlight.js';
 import { getSectionContent } from '../../utils/markdown-parser';
 
@@ -49,7 +53,10 @@ export const RendererComponent: FC<RendererProps> = ({
   // Use markdown-it to render the content
   const renderedMarkdown = useMemo(() => {
     const markdownIt = new MarkdownIt('commonmark', {
-      html: false,
+      html: true, // Enable HTML tags in source
+      breaks: true, // Convert '\n' to <br>
+      linkify: true, // Auto-convert URLs to links
+      typographer: true, // Enable smartquotes and other typographic replacements
       highlight(str: string, lang: string) {
         if (lang && highlightJs.getLanguage(lang)) {
           return highlightJs.highlight(str, {
@@ -59,7 +66,23 @@ export const RendererComponent: FC<RendererProps> = ({
         return '';
       }
     }).enable('table');
-    
+
+    // Enable task lists with enhanced options
+    markdownIt.use(markdownitTaskLists, {
+      enabled: true,
+      label: true,
+      labelClass: "markdown-task-list-label",
+    });
+    markdownIt.use(markdownItMermaid())
+
+    markdownIt.use(markdownItMultimdTable, {
+      multiline:  false,
+      rowspan:    false,
+      headerless: false,
+      multibody:  true,
+      aotolabel:  true,
+    })
+
     return markdownIt.render(displayContent);
   }, [displayContent]);
   
@@ -75,3 +98,19 @@ export const RendererComponent: FC<RendererProps> = ({
     </div>
   );
 };
+
+const markdownItMermaid = ({ ...mermaidOptions }: Partial<MermaidConfig> = {}) => {
+  mermaid.initialize({ ...mermaidOptions })
+  return (md: MarkdownIt) => {
+    const sourceRender = md.renderer.rules.fence;
+    md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+      const token = tokens[idx];
+      if (token.info === 'mermaid' && token.content) {
+        mermaid.run();
+        return `<pre class="mermaid">${token.content}</pre>`;
+      }
+      return sourceRender?.(tokens, idx, options, env, self) as string;
+    }
+  }
+}
+
