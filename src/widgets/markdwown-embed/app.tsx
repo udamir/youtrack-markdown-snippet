@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { fetchEntityContent, getEntityUrl } from '../../utils/youtrack';
 import type { EmbeddableWidgetAPI } from '../../../@types/globals';
-import { getSectionContent } from '../../utils/markdown-parser';
+import { getSectionContent, removeMarkdown } from '../../utils/markdown';
 import { ConfigComponent, type WidgetConfig } from './config';
 import { RendererComponent } from './renderer';
 
@@ -50,8 +50,8 @@ export const App: React.FC = () => {
     
     // Create a title that includes the section name if specified
     const title = configData.sectionTitle 
-      ? `${summary} - ${configData.sectionTitle}` 
-      : summary;
+      ? `${removeMarkdown(summary)} - ${removeMarkdown(configData.sectionTitle)}` 
+      : removeMarkdown(summary);
     
     // Update widget title
     hostRef.current?.setTitle(title, getEntityUrl(configData.entityId));

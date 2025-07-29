@@ -7,8 +7,8 @@ import Button from '@jetbrains/ring-ui-built/components/button/button';
 import LoaderInline from '@jetbrains/ring-ui-built/components/loader-inline/loader-inline';
 import ButtonSet from "@jetbrains/ring-ui-built/components/button-set/button-set";
 
-import { parseMarkdownSections, getSectionContent } from '../../utils/markdown-parser';
-import type { Section } from '../../utils/markdown-parser';
+import { parseMarkdownSections, getSectionContent } from '../../utils/markdown';
+import type { Section } from '../../utils/markdown';
 import type { YouTrack } from 'youtrack-client';
 import { fetchEntityContent, getEntityTypeById, isValidEntityId } from '../../utils/youtrack';
 import { RendererComponent } from './renderer';

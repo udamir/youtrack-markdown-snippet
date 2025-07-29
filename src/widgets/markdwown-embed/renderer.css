@@ -52,6 +52,85 @@
   line-height: var(--ring-line-height);
 }
 
+/* Fix markdown list styling with proper offsets */
+.markdown-embed-content ul,
+.markdown-embed-content ol {
+  margin: 0.5em 0;
+  padding-left: 2em;
+}
+
+.markdown-embed-content ul ul,
+.markdown-embed-content ol ol,
+.markdown-embed-content ul ol,
+.markdown-embed-content ol ul {
+  margin: 0.25em 0;
+  padding-left: 1.5em;
+}
+
+.markdown-embed-content li {
+  margin: 0.25em 0;
+  line-height: 1.5;
+}
+
+/* Fix paragraph spacing in lists */
+.markdown-embed-content li p {
+  margin: 0.25em 0;
+}
+
+/* Ensure mermaid diagrams are properly styled */
+.markdown-embed-content .mermaid {
+  text-align: center;
+  margin: 1em 0;
+}
+
+/* Improve code block styling */
+.markdown-embed-content pre {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.markdown-embed-content code {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+}
+
+.markdown-embed-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Improve table styling */
+.markdown-embed-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.markdown-embed-content th,
+.markdown-embed-content td {
+  border: 1px solid #d0d7de;
+  padding: 6px 13px;
+  text-align: left;
+}
+
+.markdown-embed-content th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+
+/* Improve blockquote styling */
+.markdown-embed-content blockquote {
+  border-left: 4px solid #d0d7de;
+  padding-left: 16px;
+  margin: 1em 0;
+  color: #656d76;
+}
+
 .markdown-header {
   border-bottom: 1px solid #e8eaed;
   padding-bottom: var(--ring-unit);

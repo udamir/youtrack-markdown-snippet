@@ -3,7 +3,7 @@
   "description": "A YouTrack Widget that allows you to embed markdown content from issues or articles directly into other YouTrack markdown fields",
   "author": "Damir Yusipov",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -27,7 +27,6 @@
   "dependencies": {
     "@jetbrains/ring-ui-built": "^7.0.8",
     "core-js": "3.38.0",
-    "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-multimd-table": "^4.2.3",
     "markdown-it-task-lists": "^2.1.1",

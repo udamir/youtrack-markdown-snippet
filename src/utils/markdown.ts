@@ -76,3 +76,14 @@ export function getSectionContent(markdown: string, sectionTitle: string): strin
   // This regex matches the header line at the beginning of the string
   return fullSectionContent.replace(/^#{1,6}\s+.+$/m, '').trim();
 }
+
+
+export function removeMarkdown(md: string): string {
+  return md
+    .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
+    .replace(/\[([^\]]+)\]\((.*?)\)/g, '$1') // links: [text](url) → text
+    .replace(/(`{1,3})(.*?)\1/g, '$2') // inline or block code
+    .replace(/[*_~#>`-]/g, '') // basic formatting symbols
+    .replace(/\n{2,}/g, '\n') // collapse multiple newlines
+    .trim();
+}

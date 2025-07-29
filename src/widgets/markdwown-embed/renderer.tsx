@@ -8,7 +8,7 @@ import Markdown from '@jetbrains/ring-ui-built/components/markdown/markdown';
 import MarkdownIt from 'markdown-it';
 
 import highlightJs from 'highlight.js';
-import { getSectionContent } from '../../utils/markdown-parser';
+import { getSectionContent } from '../../utils/markdown';
 
 // Import highlight.js CSS for syntax highlighting
 import 'highlight.js/styles/github.css';
