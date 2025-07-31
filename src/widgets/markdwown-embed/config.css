@@ -85,6 +85,20 @@
   background-color: var(--ring-content-background-color, #fff);
 }
 
+/* Hide scrollbars for empty content */
+.preview-container:has(.markdown-embed-empty) {
+  overflow: hidden;
+}
+
+/* Fallback for browsers that don't support :has() */
+.preview-container .markdown-embed-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 /* Ensure markdown content displays properly */
 .preview-container > div {
   width: 100%;

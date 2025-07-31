@@ -30,9 +30,9 @@ export const getEntityTypeById = (id: string): "issue" | "article" => {
  * @param id YouTrack entity ID
  * @returns URL for the entity
  */
-export const getEntityUrl = (id: string): string => {
+export const getEntityUrl = (id: string, baseUrl = ""): string => {
   const entityType = getEntityTypeById(id);
-  return `/${entityType}/${id}`;
+  return `${baseUrl}/${entityType}/${id}`;
 }
 
 /**

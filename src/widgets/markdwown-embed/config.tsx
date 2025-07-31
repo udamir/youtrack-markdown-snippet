@@ -6,6 +6,7 @@ import Input from '@jetbrains/ring-ui-built/components/input/input';
 import Button from '@jetbrains/ring-ui-built/components/button/button';
 import LoaderInline from '@jetbrains/ring-ui-built/components/loader-inline/loader-inline';
 import ButtonSet from "@jetbrains/ring-ui-built/components/button-set/button-set";
+import Theme from '@jetbrains/ring-ui-built/components/global/theme';
 
 import { parseMarkdownSections, getSectionContent } from '../../utils/markdown';
 import type { Section } from '../../utils/markdown';
@@ -33,6 +34,7 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<Section[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<typeof Theme.LIGHT | typeof Theme.DARK>(Theme.LIGHT);
   const [content, setContent] = useState<string>('');
   const [rawContent, setRawContent] = useState<string>('');
 
@@ -163,6 +165,7 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
             <RendererComponent
               content={content}
               sectionTitle=""
+              theme={currentTheme}
               loading={loading}
               error={null}
             />

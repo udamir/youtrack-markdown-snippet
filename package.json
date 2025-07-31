@@ -3,7 +3,7 @@
   "description": "A YouTrack Widget that allows you to embed markdown content from issues or articles directly into other YouTrack markdown fields",
   "author": "Damir Yusipov",
   "private": true,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -22,15 +22,13 @@
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "test": "echo 'no tests'",
     "pack": "rm -rf dist/markdown-embed.zip && npx --yes bestzip dist/markdown-embed.zip dist/*",
+    "test-upload": "dotenv -- bash -c 'youtrack-app upload dist --host $YOUTRACK_BASE_URL_TEST --token $YOUTRACK_TOKEN_TEST'",
     "upload": "dotenv -- bash -c 'youtrack-app upload dist --host $YOUTRACK_BASE_URL --token $YOUTRACK_TOKEN'"
   },
   "dependencies": {
     "@jetbrains/ring-ui-built": "^7.0.8",
     "core-js": "3.38.0",
     "markdown-it": "^14.1.0",
-    "markdown-it-multimd-table": "^4.2.3",
-    "markdown-it-task-lists": "^2.1.1",
-    "mermaid": "^11.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "youtrack-client": "^0.5.3"

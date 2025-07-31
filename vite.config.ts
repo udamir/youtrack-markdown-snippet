@@ -47,7 +47,7 @@ export default defineConfig({
     assetsDir: 'widgets/assets',
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      external: ['mermaid', 'highlight.js'],
+      external: ['mermaid', 'highlight.js', 'markdown-it-task-lists', 'markdown-it-multimd-table'],
       input: {
         // List every widget entry point here
         markdownEmbed: resolve(__dirname, 'src/widgets/markdwown-embed/index.html'),
@@ -55,7 +55,9 @@ export default defineConfig({
       output: {
         globals: {
           'mermaid': 'mermaid',
-          'highlight.js': 'hljs'
+          'highlight.js': 'hljs',
+          'markdown-it-task-lists': 'markdownItTaskLists',
+          'markdown-it-multimd-table': 'markdownItMultimdTable'
         },
         manualChunks: {
           'react': ['react', 'react-dom'],

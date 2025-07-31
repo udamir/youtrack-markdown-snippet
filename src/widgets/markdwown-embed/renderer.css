@@ -1,4 +1,4 @@
-/* YouTrack-aligned CSS Variables */
+/* YouTrack-aligned CSS Variables with theme support */
 .markdown-embed-widget {
   --ring-unit: 8px;
   --ring-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -7,6 +7,43 @@
   --content-font-size: 16px;
   --content-line-height: 24px;
   --side-spacing: calc(var(--ring-unit) * 2);
+  
+  /* Theme-aware colors with proper light/dark fallbacks */
+  --text-color: var(--ring-text-color, #000000);
+  --secondary-text-color: var(--ring-secondary-color, #5f6368);
+  --error-color: var(--ring-error-color, #d93025);
+  --background-color: var(--ring-content-background-color, #ffffff);
+  --border-color: var(--ring-borders-color, #e0e0e0);
+  --code-background: var(--ring-code-background, #f5f5f5);
+  --blockquote-border: var(--ring-borders-color, #e0e0e0);
+  --table-border: var(--ring-line-color, #e0e0e0);
+  --table-header-background: var(--ring-content-background-color, #f8f9fa);
+}
+
+/* Dark theme overrides */
+.markdown-embed-content.ring-ui-theme-dark {
+  --text-color: var(--ring-text-color, #ffffff);
+  --secondary-text-color: var(--ring-secondary-color, #8b949e);
+  --error-color: var(--ring-error-color, #f85149);
+  --background-color: var(--ring-content-background-color, #0d1117);
+  --border-color: var(--ring-borders-color, #30363d);
+  --code-background: var(--ring-code-background, #161b22);
+  --blockquote-border: var(--ring-borders-color, #30363d);
+  --table-border: var(--ring-line-color, #30363d);
+  --table-header-background: var(--ring-content-background-color, #161b22);
+}
+
+/* Light theme explicit overrides */
+.markdown-embed-content.ring-ui-theme-light {
+  --text-color: var(--ring-text-color, #24292f);
+  --secondary-text-color: var(--ring-secondary-color, #656d76);
+  --error-color: var(--ring-error-color, #d1242f);
+  --background-color: var(--ring-content-background-color, #ffffff);
+  --border-color: var(--ring-borders-color, #d0d7de);
+  --code-background: var(--ring-code-background, #f6f8fa);
+  --blockquote-border: var(--ring-borders-color, #d0d7de);
+  --table-border: var(--ring-line-color, #d0d7de);
+  --table-header-background: var(--ring-content-background-color, #f6f8fa);
 }
 
 .compactUiMode .markdown-embed-widget {
@@ -25,10 +62,10 @@
 }
 
 .markdown-embed-error {
-  color: #d93025;
+  color: var(--error-color);
   padding: calc(var(--ring-unit) * 2);
   border-radius: 4px;
-  background-color: rgba(217, 48, 37, 0.1);
+  background-color: color-mix(in srgb, var(--error-color) 10%, transparent);
   margin: calc(var(--ring-unit) * 2);
   font-family: var(--ring-font-family);
   font-size: var(--content-font-size);
@@ -36,12 +73,20 @@
 }
 
 .markdown-embed-empty {
-  color: #5f6368;
+  color: var(--secondary-text-color);
   text-align: center;
   padding: calc(var(--ring-unit) * 3);
   font-family: var(--ring-font-family);
   font-size: var(--content-font-size);
   line-height: var(--content-line-height);
+  /* Prevent scrollbars for empty content */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .markdown-embed-content {
@@ -81,26 +126,61 @@
 .markdown-embed-content .mermaid {
   text-align: center;
   margin: 1em 0;
+  background-color: var(--background-color);
+  border-radius: 6px;
+  padding: 16px;
 }
 
-/* Improve code block styling */
+/* Ensure mermaid text is visible */
+.markdown-embed-content .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown-embed-content .mermaid .node rect,
+.markdown-embed-content .mermaid .node circle,
+.markdown-embed-content .mermaid .node ellipse,
+.markdown-embed-content .mermaid .node polygon {
+  fill: var(--code-background) !important;
+  stroke: var(--border-color) !important;
+}
+
+.markdown-embed-content .mermaid .node .label,
+.markdown-embed-content .mermaid .edgeLabel,
+.markdown-embed-content .mermaid .cluster-label {
+  color: var(--text-color) !important;
+  fill: var(--text-color) !important;
+  font-family: var(--ring-font-family) !important;
+}
+
+.markdown-embed-content .mermaid .edgePath .path {
+  stroke: var(--text-color) !important;
+}
+
+/* Improve code block styling - use theme-aware colors */
 .markdown-embed-content pre {
-  background-color: #f6f8fa;
+  background-color: var(--code-background);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 16px;
   overflow-x: auto;
   margin: 1em 0;
+  color: var(--text-color);
 }
 
 .markdown-embed-content code {
-  background-color: #f6f8fa;
+  background-color: var(--code-background);
+  border: 1px solid var(--border-color);
   border-radius: 3px;
   padding: 0.2em 0.4em;
   font-size: 85%;
+  color: var(--text-color);
 }
 
+/* Override highlight.js styles to ensure proper theming */
 .markdown-embed-content pre code {
   background-color: transparent;
+  border: none;
   padding: 0;
 }
 
@@ -113,26 +193,27 @@
 
 .markdown-embed-content th,
 .markdown-embed-content td {
-  border: 1px solid #d0d7de;
+  border: 1px solid var(--table-border);
   padding: 6px 13px;
   text-align: left;
 }
 
 .markdown-embed-content th {
-  background-color: #f6f8fa;
+  background-color: var(--table-header-background);
   font-weight: 600;
+  color: var(--text-color);
 }
 
 /* Improve blockquote styling */
 .markdown-embed-content blockquote {
-  border-left: 4px solid #d0d7de;
+  border-left: 4px solid var(--blockquote-border);
   padding-left: 16px;
   margin: 1em 0;
-  color: #656d76;
+  color: var(--secondary-text-color);
 }
 
 .markdown-header {
-  border-bottom: 1px solid #e8eaed;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: var(--ring-unit);
   margin-bottom: calc(var(--ring-unit) * 2);
 }

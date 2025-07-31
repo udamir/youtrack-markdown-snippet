@@ -17,7 +17,7 @@ export function parseMarkdownSections(markdown: string): Section[] {
   
   while (match !== null) {
     const level = match[1].length;
-    const title = match[2].trim();
+    const title = removeMarkdown(match[2]).trim();
     const startPos = match.index;
     
     if (lastIndex > 0) {

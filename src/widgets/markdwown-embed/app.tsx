@@ -7,6 +7,7 @@ import type { EmbeddableWidgetAPI } from '../../../@types/globals';
 import { getSectionContent, removeMarkdown } from '../../utils/markdown';
 import { ConfigComponent, type WidgetConfig } from './config';
 import { RendererComponent } from './renderer';
+import Theme from '@jetbrains/ring-ui-built/components/global/theme';
 
 import './app.css';
 import { transformContent } from './utils';
@@ -22,6 +23,21 @@ export const App: React.FC = () => {
   const [entityContent, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<Theme.LIGHT | Theme.DARK>(Theme.LIGHT);
+  
+  // Detect YouTrack theme
+  useEffect(() => {
+    const detectTheme = () => {      
+      setCurrentTheme(document.body.classList.contains('ring-ui-theme-dark') ? Theme.DARK : Theme.LIGHT);
+    };
+    
+    detectTheme();
+    
+    const observer = new MutationObserver(detectTheme);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
   
   const fetchContent = useCallback(async (configData: WidgetConfig) => {
     if (!configData?.entityId || !youtrackRef.current) return;
@@ -54,7 +70,7 @@ export const App: React.FC = () => {
       : removeMarkdown(summary);
     
     // Update widget title
-    hostRef.current?.setTitle(title, getEntityUrl(configData.entityId));
+    hostRef.current?.setTitle(`${configData.entityId}: ${title}`, getEntityUrl(configData.entityId));
     
     setLoading(false);
   }, []);
@@ -63,7 +79,7 @@ export const App: React.FC = () => {
     setConfig(newConfig);
     setIsConfiguring(false);
     if (newConfig) {
-      hostRef.current?.storeCache(newConfig);
+      hostRef.current?.storeConfig(newConfig);
       fetchContent(newConfig);
     }
     hostRef.current?.exitConfigMode();
@@ -88,7 +104,7 @@ export const App: React.FC = () => {
         const youtrack = await YouTrack.widget(host);
         youtrackRef.current = youtrack;
 
-        const configuration: WidgetConfig | null = await host.readCache<WidgetConfig>();
+        const configuration: WidgetConfig | null = await host.readConfig<WidgetConfig>();
         if (!configuration?.entityId) {
           hostRef.current?.setTitle('Configure content to embed', '');
           await host.enterConfigMode();
@@ -121,6 +137,7 @@ export const App: React.FC = () => {
             error={error}
             content={entityContent}
             sectionTitle="" // Don't pass section title to renderer
+            theme={currentTheme}
           />
         )}
     </div>
