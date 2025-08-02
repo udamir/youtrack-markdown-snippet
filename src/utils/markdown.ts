@@ -80,6 +80,7 @@ export function getSectionContent(markdown: string, sectionTitle: string): strin
 
 export function removeMarkdown(md: string): string {
   return md
+    .replace(/<[^>]*>/g, '') // remove HTML tags
     .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
     .replace(/\[([^\]]+)\]\((.*?)\)/g, '$1') // links: [text](url) → text
     .replace(/(`{1,3})(.*?)\1/g, '$2') // inline or block code
