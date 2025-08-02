@@ -46,7 +46,7 @@ export const App: React.FC = () => {
     setError(null);
     
     // Determine the entity type by ID format
-    const { summary, content, attachments, error } = await fetchEntityContent(configData.entityId, youtrackRef.current);
+    const { summary, content, fields, attachments, error } = await fetchEntityContent(configData.entityId, youtrackRef.current);
     
     if (error) {
       setError(`Failed to fetch content: ${error.message || String(error)}`);
@@ -54,7 +54,13 @@ export const App: React.FC = () => {
       return;
     }
     
-    const transformedContent = transformContent(content, attachments);
+    // Determine which content to use based on contentField
+    let selectedContent = content || '';
+    if (configData.contentField && configData.contentField !== 'description' && fields && fields[configData.contentField]) {
+      selectedContent = fields[configData.contentField];
+    }
+    
+    const transformedContent = transformContent(selectedContent, attachments);
 
     // Update state with the content
     if (configData.sectionTitle) {

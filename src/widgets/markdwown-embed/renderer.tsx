@@ -221,7 +221,6 @@ export const RendererComponent: FC<RendererProps> = ({
           if (window.mermaid) {
             const mermaidTheme = isDarkTheme ? 'dark' : 'default';
 
-            
             const themeVariables = isDarkTheme ? {
               primaryColor: '#bb86fc',
               primaryTextColor: '#ffffff',
@@ -279,7 +278,7 @@ export const RendererComponent: FC<RendererProps> = ({
             await window.mermaid.run();
           }
         } catch (renderError) {
-          // Silently handle mermaid rendering errors
+          console.error('[Mermaid] Rendering error:', renderError);
         }
       };
       

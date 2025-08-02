@@ -20,6 +20,7 @@ import { transformContent } from './utils';
 export interface WidgetConfig {
   entityId: string;
   sectionTitle?: string;
+  contentField?: string;
 }
 
 export interface ConfigProps {
@@ -31,30 +32,38 @@ export interface ConfigProps {
 export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrackRef }): React.ReactElement => {
   const [entityId, setEntityId] = useState(config?.entityId || '');
   const [sectionTitle, setSectionTitle] = useState(config?.sectionTitle || '');
+  const [contentField, setContentField] = useState(config?.contentField || 'description');
   const [loading, setLoading] = useState(false);
   const [sections, setSections] = useState<Section[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [currentTheme, setCurrentTheme] = useState<typeof Theme.LIGHT | typeof Theme.DARK>(Theme.LIGHT);
   const [content, setContent] = useState<string>('');
   const [rawContent, setRawContent] = useState<string>('');
+  const [availableFields, setAvailableFields] = useState<Record<string, string>>({});
+  const [entityDescription, setEntityDescription] = useState<string>('');
 
   const youtrack = youtrackRef.current;
 
   // Preview the selected content
   const updatePreviewContent = useCallback(() => {
-    if (!rawContent) {
+    const sourceContent = contentField === 'description' ? entityDescription : availableFields[contentField] || '';
+    
+    if (!sourceContent) {
       setContent('');
       return;
     }
     
+    // Transform content with attachments for rawContent
+    const transformedContent = rawContent || sourceContent;
+    
     // If a section is selected and it's not empty (empty string is "All content" option)
     if (sectionTitle && sectionTitle.trim() !== '') {
-      setContent(getSectionContent(rawContent || '', sectionTitle));
+      setContent(getSectionContent(transformedContent, sectionTitle));
     } else {
       // Otherwise show all content
-      setContent(rawContent || '');
+      setContent(transformedContent);
     }
-  }, [rawContent, sectionTitle]);
+  }, [rawContent, sectionTitle, contentField, availableFields, entityDescription]);
 
   // Effect to update preview when section or content changes
   useEffect(() => {
@@ -72,29 +81,38 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
     const entityType = getEntityTypeById(entityId);
 
     // Fetch content from the API
-    const { content, attachments, error } = await fetchEntityContent(entityId, youtrack);
+    const { content, fields, attachments, error } = await fetchEntityContent(entityId, youtrack);
       
     if (error) {
       setError(`Failed to fetch ${entityType}: ${error.message || String(error)}`);
       setSections([]);
       setRawContent('');
       setContent('');
+      setEntityDescription('');
+      setAvailableFields({});
       setLoading(false);
       return;
     }
     
+    // Store content and fields data
+    setEntityDescription(content || '');
+    setAvailableFields(fields || {});
+    
+    // Use the selected content field for rawContent
+    const selectedContent = fields[contentField] || content || '';
+    
     // Store raw content for later use
-    setRawContent(transformContent(content, attachments));
+    setRawContent(transformContent(selectedContent, attachments));
           
     // Parse markdown sections and update state
-    const parsedSections = parseMarkdownSections(content);
+    const parsedSections = parseMarkdownSections(selectedContent);
     setSections(parsedSections);
     
     setLoading(false);
     
     // Return the parsed sections for additional processing if needed
     return parsedSections;
-  }, [entityId, youtrack]); // Only depends on entityId and youtrack
+  }, [entityId, youtrack, contentField]); // Depends on entityId, youtrack, and contentField
   
   // Auto-fetch content ONLY when entityId changes and is valid
   useEffect(() => {
@@ -104,6 +122,8 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
       setSections([]);
       setContent('');
       setRawContent('');
+      setEntityDescription('');
+      setAvailableFields({});
     }
   }, [entityId, fetchContentAndParseSections]);
   
@@ -128,6 +148,31 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
             error={entityId && !isValidEntityId(entityId) ? 'Invalid ID format' : null}
           />
         </div>
+        
+        {/* Content field select - only show if entity has text fields */}
+        {Object.keys(availableFields).length > 0 && (
+          <div className="content-field-select-container">
+            <label htmlFor="content-field-select">Content field</label>
+            <Select
+              id="content-field-select"
+              disabled={loading}
+              data={[
+                { label: 'Description', key: 'description' },
+                ...Object.keys(availableFields).map(fieldName => ({
+                  label: fieldName,
+                  key: fieldName
+                }))
+              ]}
+              selected={{
+                label: contentField === 'description' ? 'Description' : contentField,
+                key: contentField
+              }}
+              onSelect={(item: SelectItem | null) => setContentField(item?.key as string || 'description')}
+              className="full-width-select"
+            />
+          </div>
+        )}
+        
         <div className="content-id-loader">
           {loading && <LoaderInline/>}
         </div>
@@ -176,7 +221,7 @@ export const ConfigComponent: React.FC<ConfigProps> = ({ config, onSave, youtrac
       
       <div className="bottom-button-container">
         <ButtonSet className="config-buttons">
-          <Button primary disabled={!entityId || !isValidEntityId(entityId)} onClick={() => onSave({ entityId, sectionTitle })}>Save</Button>
+          <Button primary disabled={!entityId || !isValidEntityId(entityId)} onClick={() => onSave({ entityId, sectionTitle, contentField })}>Save</Button>
           <Button secondary onClick={() => onSave(config)}>Cancel</Button>
         </ButtonSet>
       </div>

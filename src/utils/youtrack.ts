@@ -41,14 +41,22 @@ export const getEntityUrl = (id: string, baseUrl = ""): string => {
  * @param youtrack YouTrack client instance
  * @returns Tuple of [content, error]
  */
-export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): Promise<{ summary: string, content: string, attachments: Record<string, string>, error: Error | null }> => {
+export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): Promise<{ summary: string, content: string, fields: Record<string, string>, attachments: Record<string, string>, error: Error | null }> => {
   const entityType = getEntityTypeById(entityId);
   
   if (entityType === 'issue') {
-    const [issue, error] = await tryCatch(youtrack.Issues.getIssueById(entityId, {fields: 'summary,description,attachments(id,url,name)'}));
+    const [issue, error] = await tryCatch(youtrack.Issues.getIssueById(entityId, {fields: 'summary,description,attachments(id,url,name),fields(id,name,value(text))'}));
     return { 
       summary: issue?.summary ?? '', 
       content: issue?.description ?? '', 
+      fields: (issue as any)?.fields.reduce(
+        (acc: Record<string, string>, { name, value, $type }: { name: string, $type: string, value: { text: string } }) => {
+          if (!name || !value || $type !== "TextIssueCustomField") return acc
+          acc[name] = value.text
+          return acc
+        },
+        {} as Record<string, string>,
+      ) ?? {},
       attachments: issue?.attachments.reduce(
         (acc, { name, url }) => {
           if (!name || !url) return acc
@@ -66,6 +74,7 @@ export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): 
     return { 
       summary: article?.summary ?? '', 
       content: article?.content ?? '', 
+      fields: {},
       attachments: article?.attachments.reduce(
         (acc, { name, url }) => {
           if (!name || !url) return acc
@@ -78,5 +87,5 @@ export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): 
     };
   }
 
-  return { summary: '', content: '', attachments: {}, error: new Error('Invalid entity type') };
+  return { summary: '', content: '', fields: {}, attachments: {}, error: new Error('Invalid entity type') };
 }

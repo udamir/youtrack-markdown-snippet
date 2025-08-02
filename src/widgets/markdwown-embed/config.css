@@ -22,6 +22,14 @@
   gap: 8px;
 }
 
+.content-field-select-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 300px;
+}
+
 .content-id-loader {
   display: flex;
   align-items: center;
@@ -43,6 +51,7 @@
 
 /* Labels */
 .content-id-input-container label,
+.content-field-select-container label,
 .section-select-row label {
   font-weight: 500;
   font-size: 14px;
