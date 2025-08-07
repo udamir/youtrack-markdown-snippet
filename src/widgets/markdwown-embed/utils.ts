@@ -16,8 +16,21 @@ export const transformContent = (content: string, attachments: Record<string, st
  */
 export const processImageAttributes = (content: string, attachments: Record<string, string>): string => {
   try {
-    // Handle regular images with YouTrack attribute syntax
-    const imageAttributeRegex = /!\[(.*?)\]\((.*?)\)(?:\{(.*?)\})?/g
+    // If no attachments, return content as-is
+    if (!attachments || Object.keys(attachments).length === 0) {
+      return content
+    }
+
+    // Create dynamic regex based on actual attachment names
+    const attachmentNames = Object.keys(attachments)
+      .map(name => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) // Escape special regex characters
+      .join('|')
+    
+    // Match images with any of the actual attachment names
+    const imageAttributeRegex = new RegExp(
+      `!\\[([^\\]]*)\\]\\((${attachmentNames})\\)(?:\\{([^}]*)\\})?`,
+      'g'
+    )
 
     return content.replace(imageAttributeRegex, (_, alt, src, attrs) => {
       // Extract attributes if present
@@ -29,38 +42,8 @@ export const processImageAttributes = (content: string, attachments: Record<stri
         height = attrParts.find((attr: string) => attr.startsWith("height="))?.replace("height=", "") || ""
       }
 
-      // Try to find a matching attachment by exact name or filename
-      let finalSrc = src
-      if (attachments) {
-        const fileName = src.split("/").pop() || src
-
-        // First try direct match
-        if (attachments[src]) {
-          finalSrc = attachments[src]
-        } else {
-          const attachmentKey = Object.keys(attachments).find(
-            (key: string) => key.endsWith(fileName) || key === fileName,
-          )
-
-          if (attachmentKey) {
-            finalSrc = attachments[attachmentKey]
-          }
-        }
-
-        // Ensure the URL has YouTrack base URL if needed
-        if (finalSrc && finalSrc !== src) {
-          // If the URL doesn't already start with http/https, add the YouTrack base URL
-          if (!finalSrc.startsWith("http://") && !finalSrc.startsWith("https://")) {
-            // If the URL already starts with a slash, just append to base URL
-            if (finalSrc.startsWith("/")) {
-              finalSrc = `${finalSrc}`
-            } else {
-              // Otherwise add a slash between base URL and path
-              finalSrc = `/${finalSrc}`
-            }
-          }
-        }
-      }
+      // Direct replacement since regex already matched exact attachment name
+      const finalSrc = attachments[src]
 
       // Generate direct HTML for the image to ensure attributes are handled correctly
       let style = ""

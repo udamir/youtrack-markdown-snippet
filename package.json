@@ -19,6 +19,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.app.json && vite build && youtrack-app validate dist",
+    "build:backend": "tsc -p tsconfig.backend.json",
+    "build:all": "npm run build && npm run build:backend",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "test": "echo 'no tests'",
     "pack": "rm -rf dist/markdown-embed.zip && npx --yes bestzip dist/markdown-embed.zip dist/*",
@@ -28,6 +30,7 @@
   "dependencies": {
     "@jetbrains/ring-ui-built": "^7.0.8",
     "core-js": "3.38.0",
+    "jszip": "^3.10.1",
     "markdown-it": "^14.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

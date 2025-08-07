@@ -1,6 +1,8 @@
 import type { YouTrack } from "youtrack-client";
 import { tryCatch } from "./tryCatch";
 
+import JSZip from "jszip"
+
 /**
  * Validates if a string is a valid YouTrack entity ID format
  * Valid formats: XXX-DDD or XXX-A-DDD where X is letter, D is digit, A is constant letter
@@ -88,4 +90,66 @@ export const fetchEntityContent = async (entityId: string, youtrack: YouTrack): 
   }
 
   return { summary: '', content: '', fields: {}, attachments: {}, error: new Error('Invalid entity type') };
+}
+
+export type WorkflowEntity = {
+  id: string
+  name: string
+}
+
+export const fetchWorkflows = async (youtrack: YouTrack): Promise<WorkflowEntity[]> => {
+  return []
+  // const [data, error] = await tryCatch(
+  //   youtrack.fetch<WorkflowEntity[]>({
+  //     url: "/api/admin/workflows?fields=id,name&$top=-1&query=language:JS,mps",
+  //   }),
+  // )
+  // if (error) {
+  //   throw new Error(`Cannot fetch workflows: ${error}`)
+  // }
+  // return data
+}
+
+/**
+ * Fetch a workflow script names with embedRenderer from YouTrack
+ * @param workflow Workflow name
+ * @returns {Promise<string[] | null>} Workflow scripts as an array of strings
+ * @throws {YouTrackApiError} If the workflow cannot be fetched
+ */
+export const fetchWorkflowScripts = async (workflow: string, youtrack: YouTrack): Promise<string[] | null> => {
+  return []
+  // // Remove @ prefix but don't encode the whole name
+  // const workflowName = workflow.replace(/^@/, "")
+  // const [blob, error] = await tryCatch(youtrack.fetch<Blob>({
+  //   url: `/api/admin/workflows/${workflowName}`,
+  //   method: "GET",
+  //   headers: { Accept: "application/zip" },
+  // }))
+  // if (error) {
+  //   throw new Error(`Error while fetching workflow '${workflow}'`)
+  // }
+
+  // // Convert blob to buffer and unzip
+  // const arrayBuffer = await blob.arrayBuffer()
+  // const zip = await JSZip.loadAsync(Buffer.from(arrayBuffer))
+
+  // // Extract files with their content
+  // const files: string[] = []
+
+  // for (const [fileName, file] of Object.entries(zip.files)) {
+  //   const script = await file.async("string")
+  //   if (script.includes("exports.embedRenderer")) {
+  //     files.push(fileName)
+  //   }
+  // }
+
+  // return files
+}
+
+export const fetchWorkflowScriptContent = async (workflow: string, script: string, param = "", youtrack: YouTrack): Promise<string | null> => {
+  const scripts = await fetchWorkflowScripts(workflow, youtrack)
+  if (!scripts || scripts.length === 0) {
+    return null
+  }
+  return scripts[0]
 }
