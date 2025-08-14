@@ -11,7 +11,31 @@
       "type": "string",
       "title": "Section title",
       "description": "The title of the section to embed."
+    },
+    "contentField": {
+      "type": "string",
+      "title": "Content field",
+      "description": "The field of the entity to embed."
+    },
+    "snippetTitle": {
+      "type": "string",
+      "title": "Snippet title",
+      "description": "The title of the snippet to embed."
+    },
+    "snippetWorkflow": {
+      "type": "string",
+      "title": "Snippet workflow",
+      "description": "The workflow of the snippet to embed."
+    },
+    "snippetRule": {
+      "type": "string",
+      "title": "Snippet rule",
+      "description": "The rule of the snippet to embed."
+    },
+    "snippetParam": {
+      "type": "string",
+      "title": "Snippet parameter",
+      "description": "The parameter of the snippet to embed."
     }
-  },
-  "required": ["entityId", "sectionTitle"]
+  }
 }

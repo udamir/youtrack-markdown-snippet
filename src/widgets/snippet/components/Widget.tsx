@@ -2,7 +2,6 @@ import { memo, type ReactNode, useEffect, useState } from "react"
 
 import { WidgetContextProvider } from "../contexts/WidgetContext"
 import { useYoutrack } from "../hooks/useYoutrack"
-import type { WidgetConfig } from "./ConfigForm"
 
 export type WidgetConfigurationFormParams<T> = {
   initialConfig: T
@@ -41,7 +40,7 @@ export const Widget = memo(<T extends Record<string, any>>({
       setConfig(config || null)
     }
     loadConfig()
-  }, [isRegistered])
+  }, [isRegistered, widgetApi])
   
   const [isConfiguring, setIsConfiguring] = useState(false)
   onConfigure(() => setIsConfiguring(true))

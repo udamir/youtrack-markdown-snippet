@@ -5,8 +5,8 @@ export interface WidgetConfig {
   contentField?: string;
   // Workflow Snippet configuration
   snippetWorkflow?: string;
-  snippetRule?: string;
   snippetTitle?: string;
+  snippetRule?: string;
   snippetParam?: string;
 }
 

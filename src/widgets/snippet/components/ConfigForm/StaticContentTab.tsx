@@ -48,11 +48,6 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
       entityId, 
       sectionTitle, 
       contentField,
-      // Clear snippet fields when using static content
-      snippetWorkflow: undefined,
-      snippetRule: undefined,
-      snippetParam: undefined,
-      snippetTitle: undefined,
     })
     setContent(transformedContent)
   }, [entity, entityId, sectionTitle, contentField, updateConfig])

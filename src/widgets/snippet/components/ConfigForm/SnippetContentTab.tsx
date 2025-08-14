@@ -46,10 +46,6 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
         snippetRule: rule,
         snippetParam: param,
         snippetTitle: snippet.title,
-        // Clear static content fields when using snippet
-        entityId: undefined,
-        sectionTitle: undefined,
-        contentField: undefined,
       })
     }
 
