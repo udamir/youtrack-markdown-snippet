@@ -17,6 +17,10 @@ export default defineConfig({
           dest: '.'
         },
         {
+          src: '*.js',
+          dest: '.'
+        },
+        {
           src: '../public/*.*',
           dest: '.'
         }
@@ -50,7 +54,7 @@ export default defineConfig({
       external: ['mermaid', 'highlight.js', 'markdown-it-task-lists', 'markdown-it-multimd-table'],
       input: {
         // List every widget entry point here
-        markdownEmbed: resolve(__dirname, 'src/widgets/markdwown-embed/index.html'),
+        snippet: resolve(__dirname, 'src/widgets/snippet/index.html'),
       },
       output: {
         globals: {

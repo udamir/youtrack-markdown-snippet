@@ -1,0 +1,32 @@
+.App {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ring-font-family);
+  font-size: var(--ring-font-size);
+  background-color: var(--ring-content-background-color);
+  color: var(--ring-text-color);
+}
+
+.component {
+  margin: var(--ring-unit);
+}
+
+.popup {
+  padding: var(--ring-unit);
+}
+
+.edit-form__column-panel {
+  margin-top: 0px;
+  padding: 10px 0;
+}
+
+.edit-form__input-panel {
+  padding: 10px 15px;
+  margin-top: 0px;
+}
+
+.edit-form__submit-panel {
+  margin-top: 0px;
+  padding: 15px 15px;
+}

@@ -1,14 +1,15 @@
-# YouTrack Markdown Embed Widget
+# YouTrack Markdown Snippet
 
-A YouTrack Widget that allows you to embed markdown content from issues or articles directly into other YouTrack markdown fields. This enables content reuse and maintains a single source of truth across your knowledge base.
+A YouTrack Widget that allows you to embed markdown content from different sources (issues, articles, workflow snippets) directly into other YouTrack markdown. This enables content reuse and maintains a single source of truth across your knowledge base.
 
 ## Features
 
 - Embed markdown content from any YouTrack issue or article
-- Select specific sections from the source document or include the entire content
+- Select content from any Issue Text field and from specific section of content
+- Embed dynamicly generated content (based on workflow snippets)
 - Real-time preview during configuration
 - Automatic syntax highlighting for code blocks
-- Seamless integration with YouTrack's markdown editor
+- Seamless integration with YouTrack's markdown
 
 ## Use Cases
 

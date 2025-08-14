@@ -51,7 +51,8 @@ export function parseMarkdownSections(markdown: string): Section[] {
 }
 
 export function getSectionContent(markdown: string, sectionTitle: string): string {
-  if (!markdown || !sectionTitle) return '';
+  if (!markdown) return '';
+  if (!sectionTitle) return markdown;
   
   const sections = parseMarkdownSections(markdown);
   const targetSection = sections.find(section => section.title === sectionTitle);
