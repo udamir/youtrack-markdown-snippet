@@ -24,8 +24,8 @@ export const WidgetConfigForm: WidgetConfigFormComponentType<WidgetConfig> = ({
     config.entityId || (config.snippetWorkflow && config.snippetRule)
 
   return (
-    <div className="markdown-embed-config">
-      <Tabs selected={activeTab} onSelect={setActiveTab}>
+    <div className="markdown-snippet-config">
+      <Tabs className="tab-navigation" selected={activeTab} onSelect={setActiveTab}>
         <Tab id="static" title="Static Content">
           <StaticContentTab {...{ initialConfig: config, updateConfig: setConfig }} />
         </Tab>

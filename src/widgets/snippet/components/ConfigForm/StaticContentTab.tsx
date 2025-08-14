@@ -83,7 +83,7 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
         </div>
 
         {/* Content field select - only show if entity has text fields */}
-        {availableFields.length && (
+        {!!availableFields.length && (
           <div className="content-field-select-container">
             <label htmlFor="content-field-select">Content field</label>
             <Select

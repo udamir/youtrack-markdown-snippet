@@ -31,7 +31,6 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
       return null
     }
     const { workflow, rule } = selectedSnippet
-    console.log(currentUser, entityId)
 
     const snippet = await youtrack.getSnippet(workflow, rule, param, currentUser?.login, entityId)
 

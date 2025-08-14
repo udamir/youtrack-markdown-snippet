@@ -22,12 +22,12 @@ export type WidgetContextProviderParams = {
 const WidgetContext = createContext<WidgetContextType | undefined>(undefined)
 
 export const WidgetContextProvider = (params: WidgetContextProviderParams) => {
-  const { children, value } = params
+  const { children, value: { widgetApi, youtrack, currentUser } } = params
 
   const context = {
-    widgetApi: value.widgetApi.current!,
-    youtrack: value.youtrack.current!,
-    currentUser: value.currentUser.current ?? undefined,
+    widgetApi: widgetApi.current!,
+    youtrack: youtrack.current!,
+    currentUser: currentUser.current ?? undefined,
     entityId: YTApp.entity?.id,
   }
 

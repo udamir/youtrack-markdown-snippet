@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useEffect, useState } from "react"
+import { memo, type ReactNode, useCallback, useEffect, useState } from "react"
 
 import { WidgetContextProvider } from "../contexts/WidgetContext"
 import { useYoutrack } from "../hooks/useYoutrack"
@@ -12,6 +12,7 @@ export type WidgetConfigurationFormParams<T> = {
 export type WidgetContentParams<T> = {
   config: T
   setTitle?: (title: string) => void
+  refreshTrigger?: number
 }
 
 export type WidgetConfigFormComponentType<T> = (params: WidgetConfigurationFormParams<T>) => ReactNode
@@ -30,38 +31,35 @@ export const Widget = memo(<T extends Record<string, any>>({
   loader,
   configurable = true,
 }: WidgetParams<T>) => {
-  const { widgetApi, isRegistered, onConfigure, youtrack, currentUser } = useYoutrack<T>()
+  const { widgetApi, isRegistered, youtrack, currentUser, refreshTrigger, isConfiguring, exitConfigMode, saveConfig } = useYoutrack()
   const [config, setConfig] = useState<T | null>(null)
 
   useEffect(() => {
-    async function loadConfig() {
+    const loadConfig = async () => {
       if (!widgetApi.current || !isRegistered) return
       const config = await widgetApi.current.readConfig<T>()
       setConfig(config || null)
     }
     loadConfig()
   }, [isRegistered, widgetApi])
-  
-  const [isConfiguring, setIsConfiguring] = useState(false)
-  onConfigure(() => setIsConfiguring(true))
 
   return isRegistered && widgetApi.current ? (
     <div>
       <WidgetContextProvider value={{ widgetApi, youtrack, currentUser }}>
-        {configurable && (isConfiguring || !config)
+        {configurable && isConfiguring
           ? configurationForm?.({
               initialConfig: config || {} as T,
               onSubmit: async (data) => {
-                await widgetApi.current!.storeConfig(data)
+                await saveConfig(data)
                 setConfig(data)
-                setIsConfiguring(false)
               },
               onCancel: () => {
-                setIsConfiguring(false)
-                widgetApi.current!.exitConfigMode()
+                exitConfigMode()
               },
             })
-          : widgetContent({ config: config || {} as T })}
+          : config 
+            ? widgetContent({ config, refreshTrigger })
+            : <div>No configuration found. Please configure the widget.</div>}
       </WidgetContextProvider>
     </div>
   ) : loader

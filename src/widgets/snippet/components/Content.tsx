@@ -8,7 +8,7 @@ import { useDebounce } from "../hooks/useDebounce"
 import type { WidgetConfig } from "./ConfigForm"
 import { RendererComponent } from "./Renderer"
 
-export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config, setTitle }) => {
+export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config, setTitle, refreshTrigger }) => {
   const { youtrack, currentUser, entityId } = useWidgetContext()
 
   const [content, contentError, contentLoading] = useDebounce(500, async () => {
@@ -35,7 +35,7 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
     }
 
     throw new Error(`Invalid configuration: ${JSON.stringify(config)}`)
-  }, [config])
+  }, [config, refreshTrigger])
 
   if (contentLoading) {
     return <LoadingState />
