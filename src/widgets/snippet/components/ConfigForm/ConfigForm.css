@@ -56,9 +56,13 @@
 
 /* Ring UI Tabs styling within markdown-snippet-config */
 .markdown-snippet-config .ring-tabs-tabs {
-  border-bottom: 1px solid var(--ring-border-color, #e5e5e5);
-  margin-bottom: 16px;
-  padding-bottom: 0;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+
+.config-section {
+  padding-bottom: 16px;
 }
 
 /* Tab Content Container with Fixed Height */
@@ -96,52 +100,13 @@
   background-color: rgba(217, 48, 37, 0.1);
 }
 
-/* Preview section */
-.preview-section {
-  flex-grow: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0;
-}
-
 .preview-section [data-test="ring-panel"] {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.preview-section [data-test="ring-panel__content"] {
-  flex-grow: 1;
-  height: 100%;
+  flex:1;
+  margin: 0;
   padding: 0;
-}
-
-.preview-container {
-  height: 100%;
   overflow: auto;
   background-color: var(--ring-content-background-color, #fff);
-}
-
-/* Hide scrollbars for empty content */
-.preview-container:has(.markdown-embed-empty) {
-  overflow: hidden;
-}
-
-/* Fallback for browsers that don't support :has() */
-.preview-container .markdown-embed-empty {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-}
-
-/* Ensure markdown content displays properly */
-.preview-container > div {
-  width: 100%;
-  min-height: 100%;
 }
 
 /* Bottom buttons */
@@ -150,10 +115,6 @@
   justify-content: flex-end;
   margin-top: auto;
   padding-top: 16px;
-}
-
-.markdown-embed-content {
-  padding: 0;
 }
 
 /* Preview delimiters */

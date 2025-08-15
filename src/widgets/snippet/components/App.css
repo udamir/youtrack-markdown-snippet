@@ -30,3 +30,8 @@
   margin-top: 0px;
   padding: 15px 15px;
 }
+
+.widget {
+  padding: 0 calc(var(--ring-unit) * 2);
+}
+  

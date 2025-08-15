@@ -26,7 +26,7 @@ export const WidgetConfigForm: WidgetConfigFormComponentType<WidgetConfig> = ({
   return (
     <div className="markdown-snippet-config">
       <Tabs className="tab-navigation" selected={activeTab} onSelect={setActiveTab}>
-        <Tab id="static" title="Static Content">
+        <Tab id="static" title="Entity Content">
           <StaticContentTab {...{ initialConfig: config, updateConfig: setConfig }} />
         </Tab>
 

@@ -70,69 +70,65 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
 
   return (
     <>
-      <div className="content-id-row">
-        <div className="content-id-input-container">
-          <label htmlFor="content-id-input">Content ID</label>
-          <Input
-            id="content-id-input"
-            value={entityId}
-            onChange={(event) => setEntityId(event.target.value)}
-            placeholder="Enter issue/article ID (e.g., DEMO-123)"
-            error={entityId && !isValidEntityId(entityId) ? "Invalid ID format" : null}
-          />
+      <div className="config-section">
+        <div className="content-id-row">
+          <div className="content-id-input-container">
+            <label htmlFor="content-id-input">Entity Id</label>
+            <Input
+              id="content-id-input"
+              value={entityId}
+              onChange={(event) => setEntityId(event.target.value)}
+              placeholder="Enter issue/article ID (e.g., DEMO-123)"
+              error={entityId && !isValidEntityId(entityId) ? "Invalid ID format" : null}
+            />
+          </div>
+          <div className="content-id-loader">{loading && <LoaderInline />}</div>
+
+          {/* Content field select - only show if entity has text fields */}
+          {!!availableFields.length && (
+            <div className="content-field-select-container">
+              <label htmlFor="content-field-select">Content field</label>
+              <Select
+                id="content-field-select"
+                disabled={entityLoading}
+                data={[{ label: "Description", key: "" }, ...availableFields]}
+                selected={{
+                  label: contentField === "" ? "Description" : contentField,
+                  key: contentField,
+                }}
+                onSelect={(item) => setContentField(item?.key || "")}
+                className="full-width-select"
+              />
+            </div>
+          )}
         </div>
 
-        {/* Content field select - only show if entity has text fields */}
-        {!!availableFields.length && (
-          <div className="content-field-select-container">
-            <label htmlFor="content-field-select">Content field</label>
-            <Select
-              id="content-field-select"
-              disabled={entityLoading}
-              data={[{ label: "Description", key: "" }, ...availableFields]}
-              selected={{
-                label: contentField === "" ? "Description" : contentField,
-                key: contentField,
-              }}
-              onSelect={(item) => setContentField(item?.key || "")}
-              className="full-width-select"
-            />
+        {error && (
+          <div className="error-message" role="alert">
+            {error}
           </div>
         )}
 
-        <div className="content-id-loader">{loading && <LoaderInline />}</div>
-      </div>
-
-      {error && (
-        <div className="error-message" role="alert">
-          {error}
+        <div className="section-select-row">
+          <label htmlFor="section-select">Section</label>
+          <Select
+            id="section-select"
+            disabled={!sections.length || loading}
+            data={[{ label: "All content", key: "" }, ...sectionsList]}
+            selected={{
+              label: selectedSection ? `${"#".repeat(selectedSection.level)} ${sectionTitle}` : "All content",
+              key: sectionTitle || "",
+            }}
+            onSelect={(item) => setSectionTitle(item?.key || "")}
+            className="full-width-select"
+          />
         </div>
-      )}
-
-      <div className="section-select-row">
-        <label htmlFor="section-select">Section</label>
-        <Select
-          id="section-select"
-          disabled={!sections.length || loading}
-          data={[{ label: "All content", key: "" }, ...sectionsList]}
-          selected={{
-            label: selectedSection ? `${"#".repeat(selectedSection.level)} ${sectionTitle}` : "All content",
-            key: sectionTitle || "",
-          }}
-          onSelect={(item) => setSectionTitle(item?.key || "")}
-          className="full-width-select"
-        />
       </div>
-
-      <div className="preview-delimiter" />
-
-      {content && (
-        <div className="preview-section">
-          <div className="preview-container">
-            <RendererComponent content={content} />
-          </div>
-        </div>
-      )}
+      <div className="preview-section">
+        {content && (
+          <RendererComponent content={content} />
+        )}
+      </div>
     </>
   )
 }

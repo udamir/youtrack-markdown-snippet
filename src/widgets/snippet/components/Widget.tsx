@@ -44,7 +44,7 @@ export const Widget = memo(<T extends Record<string, any>>({
   }, [isRegistered, widgetApi])
 
   return isRegistered && widgetApi.current ? (
-    <div>
+    <>
       <WidgetContextProvider value={{ widgetApi, youtrack, currentUser }}>
         {configurable && isConfiguring
           ? configurationForm?.({
@@ -61,6 +61,6 @@ export const Widget = memo(<T extends Record<string, any>>({
             ? widgetContent({ config, refreshTrigger })
             : <div>No configuration found. Please configure the widget.</div>}
       </WidgetContextProvider>
-    </div>
+    </>
   ) : loader
 })

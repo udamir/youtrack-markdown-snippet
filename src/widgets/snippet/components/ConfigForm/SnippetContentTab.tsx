@@ -18,53 +18,64 @@ interface SnippetContentTabProps {
 }
 
 export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialConfig, updateConfig }) => {
-  const {snippetWorkflow, snippetRule, snippetParam, snippetTitle} = initialConfig
+  const { snippetWorkflow, snippetRule, snippetParam, snippetTitle } = initialConfig
   const { youtrack, currentUser, entityId } = useWidgetContext()
-  const [selectedSnippet, setSelectedSnippet] = useState<Snippet | null>(snippetWorkflow && snippetRule && snippetTitle ? { workflow: snippetWorkflow, rule: snippetRule, title: snippetTitle } : null)
+  const [selectedSnippet, setSelectedSnippet] = useState<Snippet | null>(
+    snippetWorkflow && snippetRule && snippetTitle
+      ? { workflow: snippetWorkflow, rule: snippetRule, title: snippetTitle }
+      : null,
+  )
   const [input, setInput] = useState<SnippetInput["input"] | null>(null)
   const [param, setParam] = useState(snippetParam || "")
 
   const [snippets, snippetsError, snippetsLoading] = useDebounce(500, () => youtrack.getSnippets(), [youtrack])
 
-  const [snippet, snippetError, snippetLoading] = useDebounce(500, async () => {
-    if (!selectedSnippet) {
-      return null
-    }
-    const { workflow, rule } = selectedSnippet
+  const [snippet, snippetError, snippetLoading] = useDebounce(
+    500,
+    async () => {
+      if (!selectedSnippet) {
+        return null
+      }
+      const { workflow, rule } = selectedSnippet
 
-    const snippet = await youtrack.getSnippet(workflow, rule, param, currentUser?.login, entityId)
+      const snippet = await youtrack.getSnippet(workflow, rule, param, currentUser?.login, entityId)
 
-    // If snippet has input, we need to show it
-    if ("input" in snippet) {
-      setInput(snippet.input!)
-    }
+      // If snippet has input, we need to show it
+      if ("input" in snippet) {
+        setInput(snippet.input!)
+      }
 
-    if ("content" in snippet && "title" in snippet) {
-      updateConfig({
-        snippetWorkflow: workflow,
-        snippetRule: rule,
-        snippetParam: param,
-        snippetTitle: snippet.title,
-      })
-    }
+      if ("content" in snippet && "title" in snippet) {
+        updateConfig({
+          snippetWorkflow: workflow,
+          snippetRule: rule,
+          snippetParam: param,
+          snippetTitle: snippet.title,
+        })
+      }
 
-    return snippet
-  },[youtrack, selectedSnippet, param])
+      return snippet
+    },
+    [youtrack, selectedSnippet, param],
+  )
 
   const error = snippetsError || snippetError
   const loading = snippetsLoading || snippetLoading
 
-  const data = snippets?.map((snippet) => ({
-    label: snippet.title,
-    key: `${snippet.workflow}:${snippet.rule}`,
-    snippet: snippet,
-  })) || []
+  const data =
+    snippets?.map((snippet) => ({
+      label: snippet.title,
+      key: `${snippet.workflow}:${snippet.rule}`,
+      snippet: snippet,
+    })) || []
 
-  const selected = selectedSnippet ? {
-    label: selectedSnippet.title,
-    key: `${selectedSnippet.workflow}:${selectedSnippet.rule}`,
-    snippet: selectedSnippet,
-  } : null
+  const selected = selectedSnippet
+    ? {
+        label: selectedSnippet.title,
+        key: `${selectedSnippet.workflow}:${selectedSnippet.rule}`,
+        snippet: selectedSnippet,
+      }
+    : null
 
   const onSelectSnippet = (item: SelectItem | null) => {
     if (item && "snippet" in item) {
@@ -76,54 +87,49 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
 
   return (
     <>
-      <div className="content-id-row">
-        <div className="content-id-input-container">
-          <label htmlFor="snippet-select">Available Workflow Snippets</label>
-          <Select
-            id="snippet-select"
-            disabled={loading}
-            data={data}
-            selected={selected}
-            onSelect={onSelectSnippet}
-            className="full-width-select"
-          />
-        </div>
-
-        <div className="content-id-loader">{loading && <LoaderInline />}</div>
-      </div>
-
-      {error && (
-        <div className="error-message" role="alert">
-          {error}
-        </div>
-      )}
-
-      <div className="snippet-info">
-        {input && (
-          <div className="snippet-input-section">
-            <label htmlFor="snippet-param-input">
-              {input.description || "Parameter"}
-              {input.type && <span className="input-type"> ({input.type})</span>}
-            </label>
-            <Input
-              id="snippet-param-input"
-              value={param}
-              onChange={(event) => setParam(event.target.value)}
-              placeholder={`Enter ${input.type || "parameter"}...`}
+      <div className="config-section">
+        <div className="content-id-row">
+          <div className="content-id-input-container">
+            <label htmlFor="snippet-select">Available Workflow Snippets</label>
+            <Select
+              id="snippet-select"
+              disabled={loading}
+              data={data}
+              selected={selected}
+              onSelect={onSelectSnippet}
+              className="full-width-select"
             />
           </div>
-        )}
-      </div>
 
-      <div className="preview-delimiter" />
-
-      {snippet && "content" in snippet && snippet.content && (
-        <div className="preview-section">
-          <div className="preview-container">
-            <RendererComponent content={snippet.content} />
-          </div>
+          <div className="content-id-loader">{loading && <LoaderInline />}</div>
         </div>
-      )}
+
+        {error && (
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        )}
+
+        <div className="snippet-info">
+          {input && (
+            <div className="snippet-input-section">
+              <label htmlFor="snippet-param-input">
+                {input.description || "Parameter"}
+                {input.type && <span className="input-type"> ({input.type})</span>}
+              </label>
+              <Input
+                id="snippet-param-input"
+                value={param}
+                onChange={(event) => setParam(event.target.value)}
+                placeholder={`Enter ${input.type || "parameter"}...`}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="preview-section">
+        {snippet && "content" in snippet && snippet.content && <RendererComponent content={snippet.content} />}
+      </div>
     </>
   )
 }
