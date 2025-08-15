@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/youtrack-app.json",
-  "name": "md-embed",
+  "name": "markdown-snippet",
   "title": "Markdown Snippet widget",
-  "description": "YouTrack widget allows to embed article/issue parts or custom content into markdown content",
+  "description": "This widget allows to embed markdown snippets from article/issue parts or custom workflow scripts into markdown content",
   "vendor": {
     "name": "Damir Yusipov",
     "url": "https://github.com/udamir"
@@ -10,8 +10,8 @@
   "version": "1.2.0",
   "icon": "icon.svg",
   "minYouTrackVersion": "2024.3.0",
-  "changeNotes": "https://github.com/udamir/youtrack-widget-md-embed/releases",
-  "url": "https://github.com/udamir/youtrack-widget-md-embed",
+  "changeNotes": "https://github.com/udamir/youtrack-markdown-snippet/releases",
+  "url": "https://github.com/udamir/youtrack-markdown-snippet",
   "widgets": [
     {
       "key": "snippet",
@@ -19,7 +19,7 @@
       "indexPath": "snippet/index.html",
       "extensionPoint": "MARKDOWN",
       "iconPath": "snippet/icon.svg",
-      "description": "Embed article/issue parts or custom content into markdown content",
+      "description": "Embed markdown snippets from article/issue parts or custom workflow scripts into markdown content",
       "settingsSchemaPath": "snippet/settings.json",
       "defaultDimensions": {
         "height": "480px",

@@ -91,7 +91,7 @@ export class YoutrackService {
 
     if (entityType === "article") {
       const [article, error] = await tryCatch(
-        this.youtrack.Articles.getArticle(entityId, { fields: "summary,content,attachments(id,url,name)" }),
+        this.youtrack.Articles.getArticle(entityId, { fields: "summary,content,attachments(id,url,name))" }),
       )
       if (error) {
         throw new Error(`Error while fetching article '${entityId}', error: ${error.message}`)
@@ -139,9 +139,9 @@ export class YoutrackService {
     return snippets
   }
 
-  public getSnippet = async (workflow: string, rule: string, param = "", login = "", entityId = ""): Promise<SnippetContent | SnippetInput> => {
+  public getSnippet = async (workflow: string, rule: string, userInput = "", login = "", entityId = "", refreshIndex = 0): Promise<SnippetContent | SnippetInput> => {
     const [data, error] = await tryCatch(
-      this.host.fetchApp<SnippetContent | SnippetInput>("backend-global/snippet", { query: { workflow, rule, param, login, entityId }, scope: false }),
+      this.host.fetchApp<SnippetContent | SnippetInput>("backend-global/snippet", { query: { workflow, rule, userInput, login, entityId, refreshIndex }, scope: false }),
     )
     if (error || !data) {
       throw new Error(`Error while fetching workflow '${workflow}', error: ${error?.message}`)

@@ -14,16 +14,16 @@ import { transformContent } from "../../utils"
 import type { WidgetConfig } from "./types"
 
 interface StaticContentTabProps {
-  initialConfig: WidgetConfig
-  updateConfig: (config: WidgetConfig) => void
+  initialConfig: WidgetConfig | null
+  updateConfig: (config: WidgetConfig & { content?: string, error?: string }) => void
 }
 
 export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfig, updateConfig }) => {
   const { youtrack } = useWidgetContext()
-  const [entityId, setEntityId] = useState(initialConfig.entityId || "")
-  const [sectionTitle, setSectionTitle] = useState(initialConfig.sectionTitle || "")
-  const [contentField, setContentField] = useState(initialConfig.contentField || "")
-  const [content, setContent] = useState("")
+  const [entityId, setEntityId] = useState(initialConfig?.entityId || "")
+  const [sectionTitle, setSectionTitle] = useState(initialConfig?.sectionTitle || "")
+  const [contentField, setContentField] = useState(initialConfig?.contentField || "")
+  // const [content, setContent] = useState("")
 
   // Fetch entity data only when entityId changes
   const [entity, entityError, entityLoading] = useDebounce(500, async () => {
@@ -48,8 +48,9 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
       entityId, 
       sectionTitle, 
       contentField,
+      content: transformedContent,
     })
-    setContent(transformedContent)
+    // setContent(transformedContent)
   }, [entity, entityId, sectionTitle, contentField, updateConfig])
 
   const sections = parseMarkdownSections(entity?.content || "")
@@ -65,11 +66,18 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
     key: fieldName,
   })) 
   
+  useEffect(() => {
+    if (!entityError) return
+    updateConfig({
+      error: entityError,
+    })
+  }, [entityError, updateConfig])
+
   const error = entityError
   const loading = entityLoading
 
   return (
-    <>
+    <div className="tab-content-wrapper">
       <div className="config-section">
         <div className="content-id-row">
           <div className="content-id-input-container">
@@ -103,12 +111,6 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
           )}
         </div>
 
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-          </div>
-        )}
-
         <div className="section-select-row">
           <label htmlFor="section-select">Section</label>
           <Select
@@ -124,11 +126,18 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
           />
         </div>
       </div>
-      <div className="preview-section">
-        {content && (
+
+      {/* <div className="preview-section">
+        {error ? (
+          <div className="error-message" role="alert">
+            {error}
+          </div>
+        ) : content ? (
           <RendererComponent content={content} />
+        ) : (
+          <div className="preview-empty" />
         )}
-      </div>
-    </>
+      </div> */}
+    </div>
   )
 }

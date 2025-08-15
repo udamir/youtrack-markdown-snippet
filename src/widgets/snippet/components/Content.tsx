@@ -12,7 +12,7 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
   const { youtrack, currentUser, entityId } = useWidgetContext()
 
   const [content, contentError, contentLoading] = useDebounce(500, async () => {
-    if (config.entityId) {
+    if (config?.entityId) {
       const entity = await youtrack.getEntityContent(config.entityId)
       const { sectionTitle, contentField } = config
       const content = getSectionContent(contentField ? entity.fields[contentField] : entity.content, sectionTitle || "")
@@ -20,13 +20,14 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
       return transformContent(content, entity.attachments)
     }
 
-    if (config.snippetWorkflow && config.snippetRule) {
+    if (config?.snippetWorkflow && config.snippetRule) {
       const snippet = await youtrack.getSnippet(
         config.snippetWorkflow,
         config.snippetRule,
         config.snippetParam || "",
         currentUser?.login,
-        entityId
+        entityId,
+        refreshTrigger
       )
       if ("title" in snippet && "content" in snippet) {
         setTitle?.(snippet.title)

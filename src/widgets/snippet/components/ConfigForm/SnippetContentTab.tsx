@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import LoaderInline from "@jetbrains/ring-ui-built/components/loader-inline/loader-inline"
 import type { SelectItem } from "@jetbrains/ring-ui-built/components/select/select"
@@ -13,12 +13,12 @@ import { useDebounce } from "../../hooks/useDebounce"
 import { RendererComponent } from "../Renderer"
 
 interface SnippetContentTabProps {
-  initialConfig: WidgetConfig
-  updateConfig: (config: WidgetConfig) => void
+  initialConfig: WidgetConfig | null
+  updateConfig: (config: WidgetConfig & { content?: string, error?: string }) => void
 }
 
 export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialConfig, updateConfig }) => {
-  const { snippetWorkflow, snippetRule, snippetParam, snippetTitle } = initialConfig
+  const { snippetWorkflow, snippetRule, snippetParam, snippetTitle } = initialConfig || {}
   const { youtrack, currentUser, entityId } = useWidgetContext()
   const [selectedSnippet, setSelectedSnippet] = useState<Snippet | null>(
     snippetWorkflow && snippetRule && snippetTitle
@@ -51,6 +51,7 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
           snippetRule: rule,
           snippetParam: param,
           snippetTitle: snippet.title,
+          content: snippet.content,
         })
       }
 
@@ -59,7 +60,15 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
     [youtrack, selectedSnippet, param],
   )
 
-  const error = snippetsError || snippetError
+  useEffect(() => {
+    if (snippetError || snippetsError) {
+      updateConfig({
+        error: snippetsError || snippetError,
+      })
+    }
+  }, [updateConfig, snippetError, snippetsError])
+
+  // const error = snippetsError || snippetError
   const loading = snippetsLoading || snippetLoading
 
   const data =
@@ -86,50 +95,49 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
   }
 
   return (
-    <>
+    <div className="tab-content-wrapper">
       <div className="config-section">
         <div className="content-id-row">
           <div className="content-id-input-container">
-            <label htmlFor="snippet-select">Available Workflow Snippets</label>
+            <label htmlFor="snippet-select">Workflow Snippet</label>
             <Select
               id="snippet-select"
-              disabled={loading}
               data={data}
               selected={selected}
               onSelect={onSelectSnippet}
               className="full-width-select"
+              filter
+              label="Select a snippet..."
             />
           </div>
-
           <div className="content-id-loader">{loading && <LoaderInline />}</div>
         </div>
 
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
+        {input && (
+          <div className="section-select-row">
+            <label htmlFor="param-input">{input.description || "Parameter"}</label>
+            <Input
+              id="param-input"
+              value={param}
+              onChange={(e) => setParam(e.target.value)}
+              className="full-width-input"
+              placeholder="Enter parameter..."
+            />
           </div>
         )}
+      </div>
 
-        <div className="snippet-info">
-          {input && (
-            <div className="snippet-input-section">
-              <label htmlFor="snippet-param-input">
-                {input.description || "Parameter"}
-                {input.type && <span className="input-type"> ({input.type})</span>}
-              </label>
-              <Input
-                id="snippet-param-input"
-                value={param}
-                onChange={(event) => setParam(event.target.value)}
-                placeholder={`Enter ${input.type || "parameter"}...`}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="preview-section">
-        {snippet && "content" in snippet && snippet.content && <RendererComponent content={snippet.content} />}
-      </div>
-    </>
+      {/* <div className="preview-section">
+        {error ? (
+          <div className="error-message" role="alert">
+            {error || "Failed to load snippet"}
+          </div>
+        ) : snippet && "content" in snippet && snippet.content ? (
+          <RendererComponent content={snippet.content} />
+        ) : (
+          <div className="preview-empty" />
+        )}
+      </div> */}
+    </div>
   )
 }

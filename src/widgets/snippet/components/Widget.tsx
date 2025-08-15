@@ -1,16 +1,16 @@
-import { memo, type ReactNode, useCallback, useEffect, useState } from "react"
+import { memo, type ReactNode, useEffect, useState } from "react"
 
 import { WidgetContextProvider } from "../contexts/WidgetContext"
 import { useYoutrack } from "../hooks/useYoutrack"
 
 export type WidgetConfigurationFormParams<T> = {
-  initialConfig: T
+  initialConfig: T | null
   onSubmit: (config: T) => void
   onCancel: () => void
 }
 
 export type WidgetContentParams<T> = {
-  config: T
+  config: T | null
   setTitle?: (title: string) => void
   refreshTrigger?: number
 }
@@ -25,42 +25,39 @@ export type WidgetParams<T extends Record<string, any>> = {
   configurable?: boolean
 }
 
-export const Widget = memo(<T extends Record<string, any>>({
-  configurationForm,
-  widgetContent,
-  loader,
-  configurable = true,
-}: WidgetParams<T>) => {
-  const { widgetApi, isRegistered, youtrack, currentUser, refreshTrigger, isConfiguring, exitConfigMode, saveConfig } = useYoutrack()
-  const [config, setConfig] = useState<T | null>(null)
+export const Widget = memo(
+  <T extends Record<string, any>>({
+    configurationForm,
+    widgetContent,
+    loader,
+    configurable = true,
+  }: WidgetParams<T>) => {
+    const {
+      widgetApi,
+      isRegistered,
+      youtrack,
+      currentUser,
+      config,
+      refreshTrigger,
+      isConfiguring,
+      exitConfigMode,
+      saveConfig,
+    } = useYoutrack<T>(configurable)
 
-  useEffect(() => {
-    const loadConfig = async () => {
-      if (!widgetApi.current || !isRegistered) return
-      const config = await widgetApi.current.readConfig<T>()
-      setConfig(config || null)
-    }
-    loadConfig()
-  }, [isRegistered, widgetApi])
-
-  return isRegistered && widgetApi.current ? (
-    <>
-      <WidgetContextProvider value={{ widgetApi, youtrack, currentUser }}>
-        {configurable && isConfiguring
-          ? configurationForm?.({
-              initialConfig: config || {} as T,
-              onSubmit: async (data) => {
-                await saveConfig(data)
-                setConfig(data)
-              },
-              onCancel: () => {
-                exitConfigMode()
-              },
-            })
-          : config 
-            ? widgetContent({ config, refreshTrigger })
-            : <div>No configuration found. Please configure the widget.</div>}
-      </WidgetContextProvider>
-    </>
-  ) : loader
-})
+    return isRegistered && widgetApi.current ? (
+      <>
+        <WidgetContextProvider value={{ widgetApi, youtrack, currentUser }}>
+          {isConfiguring
+            ? configurationForm?.({
+                initialConfig: config,
+                onSubmit: saveConfig,
+                onCancel: exitConfigMode,
+              })
+            : widgetContent({ config, refreshTrigger })}
+        </WidgetContextProvider>
+      </>
+    ) : (
+      loader
+    )
+  },
+)

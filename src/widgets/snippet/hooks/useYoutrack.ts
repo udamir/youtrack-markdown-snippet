@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from "react"
 import type { EmbeddableWidgetAPI } from "../../../../@types/globals"
 import { YoutrackService } from "../services/YoutrackService"
 
-export const useYoutrack = () => {
+export const useYoutrack = <T>(configurable = false) => {
   const widgetApi = useRef<EmbeddableWidgetAPI | null>(null)
   const youtrack = useRef<YoutrackService | null>(null)
   const currentUser = useRef<{ id: string, login: string } | null>(null)
   const [isRegistered, setIsRegistered] = useState(false)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [isConfiguring, setIsConfiguring] = useState(false)
+  const [config, setConfig] = useState<T | null>(null)
 
   useEffect(() => {
     async function register() {
@@ -26,6 +27,15 @@ export const useYoutrack = () => {
         youtrack.current = new YoutrackService(hostInstance)
         currentUser.current = await youtrack.current.getCurrentUser()
         
+        if (configurable) {
+          const config = await widgetApi.current.readConfig<T>()
+          setConfig(config || null)
+          if (!config) {
+            setIsConfiguring(true)
+            widgetApi.current.enterConfigMode()
+          }
+        }
+
         setIsRegistered(true)
       } catch (err) {
         console.error(`Error registering widget: ${err instanceof Error ? err.message : String(err)}`)
@@ -33,7 +43,7 @@ export const useYoutrack = () => {
     }
 
     register()
-  }, [])
+  }, [configurable])
   
   const exitConfigMode = () => {
     setIsConfiguring(false)
@@ -42,9 +52,10 @@ export const useYoutrack = () => {
     }
   }
 
-  const saveConfig = async <T>(config: T) => {
+  const saveConfig = async (config: T) => {
     if (widgetApi.current) {
       await widgetApi.current.storeConfig(config)
+      setConfig(config)
       setIsConfiguring(false)
     }
   }
@@ -56,6 +67,7 @@ export const useYoutrack = () => {
     isRegistered,
     refreshTrigger,
     isConfiguring,
+    config,
     exitConfigMode,
     saveConfig,
   }
