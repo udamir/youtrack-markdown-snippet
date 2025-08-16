@@ -24,9 +24,13 @@ const WidgetContext = createContext<WidgetContextType | undefined>(undefined)
 export const WidgetContextProvider = (params: WidgetContextProviderParams) => {
   const { children, value: { widgetApi, youtrack, currentUser } } = params
 
+  if (!widgetApi.current || !youtrack.current) {
+    throw new Error("WidgetContextProvider: widgetApi and youtrack refs must be initialized")
+  }
+
   const context = {
-    widgetApi: widgetApi.current!,
-    youtrack: youtrack.current!,
+    widgetApi: widgetApi.current,
+    youtrack: youtrack.current,
     currentUser: currentUser.current ?? undefined,
     entityId: YTApp.entity?.id,
   }

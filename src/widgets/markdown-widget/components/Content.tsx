@@ -1,7 +1,4 @@
-import { LoadingState } from "./Renderer/components/LoadingState"
 import { getSectionContent, transformContent } from "../utils"
-import { ErrorState } from "./Renderer/components/ErrorState"
-import { EmptyState } from "./Renderer/components/EmptyState"
 import { useWidgetContext } from "../contexts/WidgetContext"
 import type { WidgetContentComponentType } from "./Widget"
 import { useDebounce } from "../hooks/useDebounce"
@@ -21,7 +18,7 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
     }
 
     if (config?.snippetWorkflow && config.snippetRule) {
-      const snippet = await youtrack.getSnippet(
+      const [snippet, error] = await youtrack.getSnippet(
         config.snippetWorkflow,
         config.snippetRule,
         config.snippetParam || "",
@@ -29,6 +26,11 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
         entityId,
         refreshTrigger
       )
+
+      if (error) {
+        throw new Error(`Error while fetching snippet content!\n\n\`\`\`\n${error.data.message}\n\n${error.data.stack}\n\`\`\``)
+      }
+      
       if ("title" in snippet && "content" in snippet) {
         setTitle?.(snippet.title)
         return transformContent(snippet.content, {})
@@ -38,21 +40,9 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
     throw new Error(`Invalid configuration: ${JSON.stringify(config)}`)
   }, [config, refreshTrigger])
 
-  if (contentLoading) {
-    return <LoadingState />
-  }
-
-  if (contentError) {
-    return <ErrorState error={contentError} />
-  }
-
-  if (!content || content.trim() === "") {
-    return <EmptyState />
-  }
-
   return (
     <div className="widget">
-      <RendererComponent content={content} />
+      <RendererComponent content={content} loading={contentLoading} error={contentError} />
     </div>
   )
 }

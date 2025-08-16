@@ -9,7 +9,7 @@
         "markdown-it": "^14.1.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "youtrack-client": "^0.7.0",
+        "youtrack-client": "^0.7.1",
       },
       "devDependencies": {
         "@eslint/compat": "^1.2.1",
@@ -938,7 +938,7 @@
 
     "yocto-queue": ["yocto-queue@0.1.0", "", {}, "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="],
 
-    "youtrack-client": ["youtrack-client@0.7.0", "", { "peerDependencies": { "axios": "^1.7.7" } }, "sha512-csbCjGZP610hHkMJDXVbRhgDORVB7gN0LMwf/+1n0n9XS1O2uATCcHGjn1iItRg22qsz5fZEM2MJuZweqkvn3g=="],
+    "youtrack-client": ["youtrack-client@0.7.1", "", { "peerDependencies": { "axios": "^1.7.7" } }, "sha512-56Ozvcb0qfpKmFYsDJ1n+HWkkDjx6pCKw26Wc585U5yzCMByUTxCuNwisBNNVBM7KDU2h+26r+GdKwGFcgamHg=="],
 
     "zip-lib": ["zip-lib@1.1.2", "", { "dependencies": { "yauzl": "^3.2.0", "yazl": "^3.3.1" } }, "sha512-PdPYnjxRcbQ7UAhj6Cu8rggpHXFU/6Slhoy2vuA5E/52+i6aSr+9rWup6ll/Mr0mAxV9/YkRni9xGzVc/qh4rA=="],
 

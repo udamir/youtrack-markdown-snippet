@@ -5,17 +5,17 @@ import LoaderInline from "@jetbrains/ring-ui-built/components/loader-inline/load
 import Select from "@jetbrains/ring-ui-built/components/select/select"
 import Input from "@jetbrains/ring-ui-built/components/input/input"
 
-import { parseMarkdownSections, getSectionContent } from "../../utils/markdown"
+import { parseMarkdownSections, getSectionContent, type Section } from "../../utils/markdown"
 import { useWidgetContext } from "../../contexts/WidgetContext"
 import { isValidEntityId } from "../../utils/youtrack"
 import { useDebounce } from "../../hooks/useDebounce"
-import { RendererComponent } from "../Renderer"
 import { transformContent } from "../../utils"
-import type { WidgetConfig } from "./types"
+import type { WidgetConfig } from "../../types"
+import type { EntityContent } from "../../services/YoutrackService"
 
 interface StaticContentTabProps {
   initialConfig: WidgetConfig | null
-  updateConfig: (config: WidgetConfig & { content?: string, error?: string }) => void
+  updateConfig: (config: WidgetConfig & { content?: string; error?: string }) => void
 }
 
 export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfig, updateConfig }) => {
@@ -23,7 +23,7 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
   const [entityId, setEntityId] = useState(initialConfig?.entityId || "")
   const [sectionTitle, setSectionTitle] = useState(initialConfig?.sectionTitle || "")
   const [contentField, setContentField] = useState(initialConfig?.contentField || "")
-  // const [content, setContent] = useState("")
+  const [sections, setSections] = useState<Section[]>([])
 
   // Fetch entity data only when entityId changes
   const [entity, entityError, entityLoading] = useDebounce(500, async () => {
@@ -32,49 +32,57 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
     }
 
     return await youtrack.getEntityContent(entityId)
-  }, [youtrack, entityId])
+  },
+  [youtrack, entityId])
 
   // Update config when entity or form parameters change
   useEffect(() => {
-    if (!entity) return
+    if (!entity) { return }
 
     // Generate content for preview (same logic as Content.tsx)
     const rawContent = contentField ? entity.fields[contentField] : entity.content
+    
+    const sections = parseMarkdownSections(rawContent || "")
+    if (sectionTitle && !sections.find((s) => s.title === sectionTitle)) {
+      setSectionTitle("")
+    }
+    setSections(sections)
+    
     const sectionContent = getSectionContent(rawContent || "", sectionTitle)
     const transformedContent = transformContent(sectionContent, entity.attachments)
 
     // Update config with entity data and content
-    updateConfig({ 
-      entityId, 
-      sectionTitle, 
+    updateConfig({
+      entityId,
+      sectionTitle,
       contentField,
       content: transformedContent,
     })
     // setContent(transformedContent)
   }, [entity, entityId, sectionTitle, contentField, updateConfig])
 
-  const sections = parseMarkdownSections(entity?.content || "")
-  const sectionsList = sections.map((section) => ({
+  const sectionsList = (sections: Section[]) => sections.map((section) => ({
     label: `${"#".repeat(section.level)} ${section.title}`,
     key: section.title,
   }))
 
-  const selectedSection = sections.find((s) => s.title === sectionTitle)
-  
-  const availableFields = Object.keys(entity?.fields || {}).map((fieldName) => ({
+  const availableFields = (entity: EntityContent | null) => Object.keys(entity?.fields || {}).map((fieldName) => ({
     label: fieldName,
     key: fieldName,
-  })) 
-  
+  }))
+
+  const selectedSectionLabel = (sectionTitle: string) => {
+    const section = sections.find((s) => s.title === sectionTitle)
+    return section ? `${"#".repeat(section.level)} ${section.title}` : "All content"
+  }
+
   useEffect(() => {
     if (!entityError) return
-    updateConfig({
-      error: entityError,
-    })
+    setSections([])
+    setContentField("")
+    setSectionTitle("")
+    updateConfig({ error: entityError })
   }, [entityError, updateConfig])
-
-  const error = entityError
-  const loading = entityLoading
 
   return (
     <div className="tab-content-wrapper">
@@ -90,16 +98,16 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
               error={entityId && !isValidEntityId(entityId) ? "Invalid ID format" : null}
             />
           </div>
-          <div className="content-id-loader">{loading && <LoaderInline />}</div>
+          <div className="content-id-loader">{entityLoading && <LoaderInline />}</div>
 
           {/* Content field select - only show if entity has text fields */}
-          {!!availableFields.length && (
+          {!!availableFields(entity).length && (
             <div className="content-field-select-container">
               <label htmlFor="content-field-select">Content field</label>
               <Select
                 id="content-field-select"
                 disabled={entityLoading}
-                data={[{ label: "Description", key: "" }, ...availableFields]}
+                data={[{ label: "Description", key: "" }, ...availableFields(entity)]}
                 selected={{
                   label: contentField === "" ? "Description" : contentField,
                   key: contentField,
@@ -115,10 +123,10 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
           <label htmlFor="section-select">Section</label>
           <Select
             id="section-select"
-            disabled={!sections.length || loading}
-            data={[{ label: "All content", key: "" }, ...sectionsList]}
+            disabled={!sections.length || entityLoading || !!entityError}
+            data={[{ label: "All content", key: "" }, ...sectionsList(sections)]}
             selected={{
-              label: selectedSection ? `${"#".repeat(selectedSection.level)} ${sectionTitle}` : "All content",
+              label: selectedSectionLabel(sectionTitle),
               key: sectionTitle || "",
             }}
             onSelect={(item) => setSectionTitle(item?.key || "")}
@@ -126,18 +134,6 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
           />
         </div>
       </div>
-
-      {/* <div className="preview-section">
-        {error ? (
-          <div className="error-message" role="alert">
-            {error}
-          </div>
-        ) : content ? (
-          <RendererComponent content={content} />
-        ) : (
-          <div className="preview-empty" />
-        )}
-      </div> */}
     </div>
   )
 }

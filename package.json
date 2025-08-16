@@ -22,7 +22,7 @@
     "build": "tsc -p tsconfig.app.json && vite build && youtrack-app validate dist",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "test": "echo 'no tests'",
-    "pack": "rm -rf dist/snippet-widget.zip && npx --yes bestzip dist/snippet-widget.zip dist/*",
+    "pack": "rm -rf dist/markdown-snippet.zip && npx --yes bestzip dist/markdown-snippet.zip dist/*",
     "upload:test": "dotenv -- bash -c 'youtrack-app upload dist --host $YOUTRACK_BASE_URL_TEST --token $YOUTRACK_TOKEN_TEST'",
     "upload": "dotenv -- bash -c 'youtrack-app upload dist --host $YOUTRACK_BASE_URL --token $YOUTRACK_TOKEN'"
   },
@@ -32,7 +32,7 @@
     "markdown-it": "^14.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "youtrack-client": "^0.7.0"
+    "youtrack-client": "^0.7.1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.1",

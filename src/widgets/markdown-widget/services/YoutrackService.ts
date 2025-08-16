@@ -26,8 +26,14 @@ export type SnippetContent = {
 export type SnippetInput = {
   input: {
     type: "string" | "number" | "boolean" | "text"
+    enum?: string[] | number[]
     description: string
   }
+}
+
+export type SnippetError = {
+  message: string
+  stack: string
 }
 
 export class YoutrackService {
@@ -57,7 +63,7 @@ export class YoutrackService {
     if (entityType === "issue") {
       const [issue, error] = await tryCatch(
         this.youtrack.Issues.getIssueById(entityId, {
-          fields: "summary,description,attachments(id,url,name),customFields($type,id,name,value)",
+          fields: "summary,description,attachments(id,url,name),customFields($type,id,name,value(text))",
         }),
       )
       if (error) {
@@ -72,7 +78,7 @@ export class YoutrackService {
               if (!name || !value || $type !== "TextIssueCustomField") {
                 return acc
               }
-              acc[name] = value
+              acc[name] = value.text
               return acc
             },
             {} as Record<string, string>,
@@ -91,7 +97,7 @@ export class YoutrackService {
 
     if (entityType === "article") {
       const [article, error] = await tryCatch(
-        this.youtrack.Articles.getArticle(entityId, { fields: "summary,content,attachments(id,url,name))" }),
+        this.youtrack.Articles.getArticle(entityId, { fields: "summary,content,attachments(id,url,name)" }),
       )
       if (error) {
         throw new Error(`Error while fetching article '${entityId}', error: ${error.message}`)
@@ -139,13 +145,9 @@ export class YoutrackService {
     return snippets
   }
 
-  public getSnippet = async (workflow: string, rule: string, userInput = "", login = "", entityId = "", refreshIndex = 0): Promise<SnippetContent | SnippetInput> => {
-    const [data, error] = await tryCatch(
-      this.host.fetchApp<SnippetContent | SnippetInput>("backend-global/snippet", { query: { workflow, rule, userInput, login, entityId, refreshIndex }, scope: false }),
+  public getSnippet = async (workflow: string, rule: string, userInput = "", login = "", entityId = "", refreshCount = 0) => {
+    return tryCatch<SnippetContent | SnippetInput, { data: SnippetError }>(
+      this.host.fetchApp<SnippetContent | SnippetInput>("backend-global/snippet", { query: { workflow, rule, userInput, login, entityId, refreshCount }, scope: false }),
     )
-    if (error || !data) {
-      throw new Error(`Error while fetching workflow '${workflow}', error: ${error?.message}`)
-    }
-    return data
   }
 }

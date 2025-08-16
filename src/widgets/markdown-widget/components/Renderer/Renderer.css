@@ -90,7 +90,6 @@
 }
 
 .markdown-embed-content {
-  padding: 0;
   word-break: break-word;
   font-family: var(--ring-font-family);
   font-size: var(--ring-font-size);

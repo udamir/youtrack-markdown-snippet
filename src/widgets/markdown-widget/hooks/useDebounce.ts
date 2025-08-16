@@ -11,7 +11,7 @@ export function useDebounce<T>(
   callback: () => Promise<T>,
   deps: any[] = []
 ) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<T | null>(null);
   const [error, setError] = useState<string>("");
   const handlerRef = useRef<number>();

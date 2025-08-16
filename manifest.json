@@ -16,11 +16,11 @@
     {
       "key": "snippet",
       "name": "Markdown Snippet widget",
-      "indexPath": "snippet/index.html",
+      "indexPath": "markdown-widget/index.html",
       "extensionPoint": "MARKDOWN",
-      "iconPath": "snippet/icon.svg",
+      "iconPath": "markdown-widget/icon.svg",
       "description": "Embed markdown snippets from article/issue parts or custom workflow scripts into markdown content",
-      "settingsSchemaPath": "snippet/settings.json",
+      "settingsSchemaPath": "markdown-widget/settings.json",
       "defaultDimensions": {
         "height": "480px",
         "width": "90%"

@@ -11,34 +11,44 @@ exports.httpHandler = {
       method: "GET",
       path: "snippet",
       handle: (ctx) => {
-
-        const params = ctx.request.getParameters(); 
         const entityId = ctx.request.getParameter("entityId") || "";
         const login = ctx.request.getParameter("login") || "";
         const workflow = ctx.request.getParameter("workflow") || "";
         const ruleName = ctx.request.getParameter("rule") || "";
         const userInput = ctx.request.getParameter("userInput") || "";
-        const refreshIndex = ctx.request.getParameter("refreshIndex") || 0;
+        const refreshCount = ctx.request.getParameter("refreshCount") || 0;
 
         try {
           const { rule } = require(`../${workflow}/${ruleName}`);
 
-          if (rule.userInput && !userInput) {
-            ctx.response.json({ input: rule.userInput });
+          const article = isArticle(entityId) ? entities.Article.findById(entityId) : null;
+          const issue = !isArticle(entityId) ? entities.Issue.findById(entityId) : null;
+          const currentUser = login ? entities.User.findByLogin(login) : null;
+          let input = null;
+          rule.guard({ 
+            article, 
+            issue, 
+            currentUser, 
+            setUserInput: (value) => {
+              input = value;
+            } 
+          });
+
+          if (userInput && !input) {
+            ctx.response.json({ input });
           } else {
-            const article = isArticle(entityId) ? entities.Article.findById(entityId) : null;
-            const issue = !isArticle(entityId) ? entities.Issue.findById(entityId) : null;
-            const currentUser = login ? entities.User.findByLogin(login) : null;
 
             ctx.response.json({
               title: rule.title,
-              content: rule.action({ article, issue, currentUser, userInput, refreshIndex, params }),
+              content: rule.action({ article, issue, currentUser, userInput, refreshCount }),
+              ...(input ? { input } : {})
             });
           }
         } catch (error) {
           ctx.response.code = 500;
           ctx.response.json({
-            message: `Error while fetching snippet: ${error}\nWorkflow rule: ${workflow}/${ruleName}.js\n${error.stack}`,
+            message: `Error in workflow rule: "${workflow}/${ruleName}.js"`,
+            stack: error.stack.replace(/scripts\//g, "/"),
           });
         }
       },

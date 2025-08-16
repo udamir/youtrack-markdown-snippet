@@ -54,7 +54,7 @@ export default defineConfig({
       external: ['mermaid', 'highlight.js', 'markdown-it-task-lists', 'markdown-it-multimd-table'],
       input: {
         // List every widget entry point here
-        snippet: resolve(__dirname, 'src/widgets/snippet/index.html'),
+        markdownWidget: resolve(__dirname, 'src/widgets/markdown-widget/index.html'),
       },
       output: {
         globals: {
