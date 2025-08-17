@@ -89,13 +89,14 @@ exports.rule = Snippet.forMarkdown({
   },
   action: (ctx) => {
     const params = `User: ${ctx.currentUser.login}\nUser input: "${ctx.userInput}\nRefresh count: ${ctx.refreshCount}`;
-    const data = ctx.issue ? `Issue: ${ctx.issue.id}${params}` : `Article: ${ctx.article.id}${params}`;
+    const data = ctx.issue ? `Issue: ${ctx.issue.id}\n${params}` : `Article: ${ctx.article.id}\n${params}`;
     return "```\n" + data + "\n```";
   }
 });
 ```
 
 > Note that due to YouTrack caching, updating of workflow snippets may take a few minutes to take effect.
+> Workaround: open `/markdown-snippet/backend-global.js` make a tiny change (add whitespace at the end of the file) and `Save` file. This will trigger a refresh of cache.
 
 ## Technical Details
 
