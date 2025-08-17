@@ -1,38 +1,13 @@
-export interface MermaidAPI {
-  initialize: (config: {
-    startOnLoad?: boolean;
-    theme?: string;
-    securityLevel?: string;
-    themeVariables?: Record<string, string>;
-  }) => void;
-  run: () => Promise<void>;
-  mermaidAPI?: {
-    reset: () => void;
-  };
-}
+import type { Mermaid } from "mermaid";
+import type markdownIt from "markdown-it";
+import type hljs from "highlightjs";
 
-export interface HighlightJS {
-  getLanguage: (name: string) => { name: string } | undefined;
-  highlight: (code: string, options: { language: string }) => { value: string };
-  highlightAuto: (code: string, languageSubset?: string[]) => { value: string; language: string; relevance: number };
-}
-
-export type MarkdownItPlugin = (md: unknown, options?: unknown) => void;
-
-export interface MarkdownItToken {
-  info: string;
-  content: string;
-}
-
-export interface MarkdownItRenderer {
-  fence?: (tokens: MarkdownItToken[], idx: number, options: any, env: any, slf: any) => string;
-  code_block?: (tokens: MarkdownItToken[], idx: number, options: any, env: any, slf: any) => string;
-}
+export type MarkdownItPlugin = (md: markdownIt, options?: unknown) => void;
 
 declare global {
   interface Window {
-    mermaid: MermaidAPI;
-    hljs: HighlightJS;
+    mermaid: Mermaid;
+    hljs: typeof hljs;
     markdownItTaskLists: MarkdownItPlugin;
     markdownItMultimdTable: MarkdownItPlugin;
   }

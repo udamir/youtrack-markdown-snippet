@@ -15,7 +15,7 @@ export const useYoutrack = <T>(configurable = false) => {
     async function register() {
       try {
         const hostInstance = (await YTApp.register({
-          onConfigure: () => setIsConfiguring(true),
+          onConfigure: configurable ? () => setIsConfiguring(true) : undefined,
           onRefresh: () => setRefreshTrigger(prev => prev + 1),
         })) as EmbeddableWidgetAPI
 
