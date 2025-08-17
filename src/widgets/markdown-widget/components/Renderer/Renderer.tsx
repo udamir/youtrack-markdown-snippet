@@ -45,7 +45,7 @@ export const RendererComponent: FC<RendererProps> = memo(({
       const token = tokens[idx];
       const info = token.info ? token.info.trim() : '';
       const langName = info.split(/\s+/g)[0];
-      
+
       if (info === 'mermaid') {
         const mermaidId = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
         return `<div class="mermaid" id="${mermaidId}">${token.content}</div>`;
@@ -113,14 +113,23 @@ export const RendererComponent: FC<RendererProps> = memo(({
     }
   }, [theme]);
   
+  // Re-run Mermaid after content updates to render newly injected diagrams
+  useEffect(() => {
+    if (!content || !window.mermaid) return;
+    // Ensure DOM is updated before running Mermaid
+    requestAnimationFrame(() => {
+      window.mermaid.run().catch(() => {});
+    });
+  }, [content]);
+  
   // Use markdown-it to render the content
-  const renderedMarkdown = ((content: string) => {
+  const renderedMarkdown = (content: string) => {
     if (!content) {
       return '';
     }
     
     return markdown.current?.render(content) || '';
-  })
+  };
   
   if (loading) {
     return <div className="markdown-embed-loader">Loading...</div>;
