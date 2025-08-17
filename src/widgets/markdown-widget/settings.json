@@ -2,6 +2,16 @@
   "title": "Markdown embed widget settings",
   "type": "object",
   "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "The title of the widget."
+    },
+    "url": {
+      "type": "string",
+      "title": "URL",
+      "description": "The URL for title"
+    },
     "entityId": {
       "type": "string",
       "title": "Issue/Article ID",

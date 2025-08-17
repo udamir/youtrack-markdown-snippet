@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useEffect, useState } from "react"
+import { memo, type ReactNode } from "react"
 
 import { WidgetContextProvider } from "../contexts/WidgetContext"
 import { useYoutrack } from "../hooks/useYoutrack"
@@ -40,24 +40,18 @@ export const Widget = memo(
       config,
       refreshTrigger,
       isConfiguring,
-      exitConfigMode,
-      saveConfig,
+      exitConfigMode: onCancel,
+      saveConfig: onSubmit,
     } = useYoutrack<T>(configurable)
 
     return isRegistered && widgetApi.current ? (
       <>
         <WidgetContextProvider value={{ widgetApi, youtrack, currentUser }}>
           {isConfiguring
-            ? configurationForm?.({
-                initialConfig: config,
-                onSubmit: saveConfig,
-                onCancel: exitConfigMode,
-              })
+            ? configurationForm?.({ initialConfig: config, onSubmit, onCancel })
             : widgetContent({ config, refreshTrigger })}
         </WidgetContextProvider>
       </>
-    ) : (
-      loader
-    )
+    ) : loader
   },
 )

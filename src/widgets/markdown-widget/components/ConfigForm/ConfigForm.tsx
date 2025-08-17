@@ -1,26 +1,32 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import ButtonSet from "@jetbrains/ring-ui-built/components/button-set/button-set.js"
 import Button from "@jetbrains/ring-ui-built/components/button/button.js"
 import Tabs from "@jetbrains/ring-ui-built/components/tabs/dumb-tabs"
 import Tab from "@jetbrains/ring-ui-built/components/tabs/tab"
 
+import { useWidgetContext } from "../../contexts/WidgetContext"
 import type { WidgetConfigFormComponentType } from "../Widget"
 import { SnippetContentTab } from "./SnippetContentTab"
 import { StaticContentTab } from "./StaticContentTab"
 import type { WidgetConfig } from "../../types"
+import { RendererComponent } from "../Renderer"
 
 import "./ConfigForm.css"
-import { RendererComponent } from "../Renderer"
 
 export const WidgetConfigForm: WidgetConfigFormComponentType<WidgetConfig> = ({
   initialConfig,
   onSubmit,
   onCancel,
 }) => {
+  const { widgetApi } = useWidgetContext()
   const [activeTab, setActiveTab] = useState(initialConfig?.snippetWorkflow ? "snippet" : "static")
   const [staticState, setStaticState] = useState<WidgetConfig & { content?: string, error?: string } | null>(initialConfig)
   const [snippetState, setSnippetState] = useState<WidgetConfig & { content?: string, error?: string } | null>(initialConfig)
+
+  useEffect(() => {
+    widgetApi.setTitle("Markdown Snippet Configuration", "")
+  }, [widgetApi])
 
   const isConfigCorrect = (config: WidgetConfig | null) =>
     config && (config.entityId || (config.snippetWorkflow && config.snippetRule))

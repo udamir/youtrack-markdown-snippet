@@ -6,12 +6,12 @@ import Select from "@jetbrains/ring-ui-built/components/select/select"
 import Input from "@jetbrains/ring-ui-built/components/input/input"
 
 import { parseMarkdownSections, getSectionContent, type Section } from "../../utils/markdown"
+import { getEntityUrl, isValidEntityId } from "../../utils/youtrack"
+import type { EntityContent } from "../../services/YoutrackService"
 import { useWidgetContext } from "../../contexts/WidgetContext"
-import { isValidEntityId } from "../../utils/youtrack"
 import { useDebounce } from "../../hooks/useDebounce"
 import { transformContent } from "../../utils"
 import type { WidgetConfig } from "../../types"
-import type { EntityContent } from "../../services/YoutrackService"
 
 interface StaticContentTabProps {
   initialConfig: WidgetConfig | null
@@ -32,8 +32,7 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
     }
 
     return await youtrack.getEntityContent(entityId)
-  },
-  [youtrack, entityId])
+  }, [youtrack, entityId])
 
   // Update config when entity or form parameters change
   useEffect(() => {
@@ -53,6 +52,8 @@ export const StaticContentTab: React.FC<StaticContentTabProps> = ({ initialConfi
 
     // Update config with entity data and content
     updateConfig({
+      title: `${entityId}: ${entity.summary}${contentField ? ` (${contentField})` : ""}${sectionTitle ? ` - ${sectionTitle}` : ""}`,
+      url: getEntityUrl(entityId),
       entityId,
       sectionTitle,
       contentField,

@@ -1,4 +1,6 @@
 export interface WidgetConfig {
+  title?: string;
+  url?: string;
   // Static content configuration
   entityId?: string;
   sectionTitle?: string;

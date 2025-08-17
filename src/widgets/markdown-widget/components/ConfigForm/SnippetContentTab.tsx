@@ -28,8 +28,6 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
   const [param, setParam] = useState(snippetParam || "")
 
   const [snippets, snippetsError, snippetsLoading] = useDebounce(500, () => youtrack.getSnippets(), [youtrack])
-
-  console.log(snippets)
   
   const [snippet, snippetError, snippetLoading] = useDebounce(500, async () => {
     if (!selectedSnippet) {
@@ -52,6 +50,7 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
 
     if ("content" in snippet && "title" in snippet) {
       updateConfig({
+        title: `${selectedSnippet.title}${param ? ` - ${param}` : ""}`,
         snippetWorkflow: workflow,
         snippetRule: rule,
         snippetParam: param,

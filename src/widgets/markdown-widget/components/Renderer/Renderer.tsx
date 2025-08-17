@@ -125,17 +125,8 @@ export const RendererComponent: FC<RendererProps> = memo(({
   if (loading) {
     return <div className="markdown-embed-loader">Loading...</div>;
   }
-
-  if (error) {
-    return (<div className={`markdown-embed-content ${theme === 'dark' ? 'ring-ui-theme-dark' : 'ring-ui-theme-light'}`}>
-      <Markdown>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-        <div dangerouslySetInnerHTML={{ __html: renderedMarkdown(error) }} />
-      </Markdown>
-    </div>);
-  }
   
-  if (!content) {
+  if (!error && !content) {
     return <div className="markdown-embed-empty">No content to display</div>;
   }
   
@@ -143,7 +134,7 @@ export const RendererComponent: FC<RendererProps> = memo(({
     <div className={`markdown-embed-content ${theme === 'dark' ? 'ring-ui-theme-dark' : 'ring-ui-theme-light'}`}>
       <Markdown>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-        <div dangerouslySetInnerHTML={{ __html: renderedMarkdown(content) }} />
+        <div dangerouslySetInnerHTML={{ __html: renderedMarkdown(error ? error : content || '') }} />
       </Markdown>
     </div>
   );

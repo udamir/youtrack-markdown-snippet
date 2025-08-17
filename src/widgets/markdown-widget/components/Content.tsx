@@ -1,3 +1,5 @@
+import { useEffect } from "react"
+
 import { getSectionContent, transformContent } from "../utils"
 import { useWidgetContext } from "../contexts/WidgetContext"
 import type { WidgetContentComponentType } from "./Widget"
@@ -6,7 +8,11 @@ import type { WidgetConfig } from "./ConfigForm"
 import { RendererComponent } from "./Renderer"
 
 export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config, setTitle, refreshTrigger }) => {
-  const { youtrack, currentUser, entityId } = useWidgetContext()
+  const { widgetApi, youtrack, currentUser, entityId } = useWidgetContext()
+
+  useEffect(() => {
+    widgetApi.setTitle(config?.title || "Markdown Snippet Widget", config?.url || "")
+  }, [config, widgetApi])
 
   const [content, contentError, contentLoading] = useDebounce(500, async () => {
     if (config?.entityId) {
