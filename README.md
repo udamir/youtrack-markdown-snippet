@@ -24,9 +24,12 @@ A YouTrack Widget that allows you to embed markdown content from different sourc
 
 - YouTrack 2023.2 or later
 
-## Installation
+## Installation 
 
-1. Download the latest release from the GitHub releases page
+Install plugin via JetBrains marketplace https://plugins.jetbrains.com/plugin/28224
+
+Manual installation steps:
+1. Pack `markdown-snippet.zip` file from source code
 2. Go to the YouTrack Administration area
 3. Navigate to Apps
 4. Click "Upload app zip"
