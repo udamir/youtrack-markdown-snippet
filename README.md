@@ -35,12 +35,38 @@ A YouTrack Widget that allows you to embed markdown content from different sourc
 ## Usage
 
 1. Edit any markdown field in YouTrack
-2. Click the widget icon in the toolbar and choose "Markdown Snippet"
+2. Click `Image and Embedded content` icon in the toolbar and choose `Widgets` > `Markdown Snippet Widget`
 3. In the configuration popup, pick between tabs:
-   - __Static Content__: enter an entity ID (e.g., `ABC-123` or an article ID). Optionally choose a Text field and a section.
-   - __Snippet__: pick a workflow snippet. Input parameters if the snippet has `userInput`.
-4. Preview updates in real-time. Fix any validation errors shown.
+   - __Entity Content__: enter an entity ID (e.g., `ABC-123` or an article ID). Optionally choose a `Content field` and a `Section`.
+   - __Workflow Snippet__: pick a workflow snippet. Input parameters if the snippet has `userInput`.
+4. Preview updates in real-time.
 5. Save the configuration to embed.
+
+## Workflow snippet example
+
+Add this snippet to your workflow (Administration > Workflows) and it automatically appears in the widget.
+
+```js
+const { Snippet } = require("../markdown-snippet/snippet");
+
+exports.rule = Snippet.forMarkdown({
+  title: "Test snippet",
+  name: "test-snippet",
+  userInput: {
+  	type: "string",
+    enum: ["foo", "bar", "baz"],
+    description: "Select an option"
+  },
+  action: (ctx) => {
+    const params = `User: ${ctx.currentUser.login}\nUser input: "${ctx.userInput}\nRefresh count: ${ctx.refreshCount}`;
+    const data = ctx.issue ? `Issue: ${ctx.issue.id}\n${params}` : `Article: ${ctx.article.id}\n${params}`;
+    return "```\n" + data + "\n```";
+  }
+});
+```
+
+> Note that due to YouTrack caching, updating of workflow snippets may take a few minutes to take effect.
+> Workaround: open `/markdown-snippet/backend-global.js` make a tiny change (add whitespace at the end of the file) and `Save` file. This will trigger a refresh of cache.
 
 ## Development
 
@@ -71,32 +97,6 @@ To use the upload functionality, create a `.env` file in the root directory with
 YOUTRACK_BASE_URL=https://youtrack-instance.example.com
 YOUTRACK_TOKEN=perm:your-permanent-token
 ```
-
-## Workflow snippet example
-
-Add this snippet to your workflow (Administration > Workflows) and it automatically appears in the widget.
-
-```js
-const { Snippet } = require("../markdown-snippet/snippet");
-
-exports.rule = Snippet.forMarkdown({
-  title: "Test snippet",
-  name: "test-snippet",
-  userInput: {
-  	type: "string",
-    enum: ["foo", "bar", "baz"],
-    description: "Select an option"
-  },
-  action: (ctx) => {
-    const params = `User: ${ctx.currentUser.login}\nUser input: "${ctx.userInput}\nRefresh count: ${ctx.refreshCount}`;
-    const data = ctx.issue ? `Issue: ${ctx.issue.id}\n${params}` : `Article: ${ctx.article.id}\n${params}`;
-    return "```\n" + data + "\n```";
-  }
-});
-```
-
-> Note that due to YouTrack caching, updating of workflow snippets may take a few minutes to take effect.
-> Workaround: open `/markdown-snippet/backend-global.js` make a tiny change (add whitespace at the end of the file) and `Save` file. This will trigger a refresh of cache.
 
 ## Technical Details
 
