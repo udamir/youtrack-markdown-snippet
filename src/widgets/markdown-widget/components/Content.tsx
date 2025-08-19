@@ -15,6 +15,10 @@ export const WidgetContent: WidgetContentComponentType<WidgetConfig> = ({ config
   }, [config, widgetApi])
 
   const [content, contentError, contentLoading] = useDebounce(500, async () => {
+    if (!config) {
+      throw new Error("Configuration is not set!")
+    }
+    
     if (config?.entityId) {
       const entity = await youtrack.getEntityContent(config.entityId)
       const { sectionTitle, contentField } = config

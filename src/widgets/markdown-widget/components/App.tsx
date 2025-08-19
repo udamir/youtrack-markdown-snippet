@@ -1,10 +1,10 @@
-import { ThemeProvider, useTheme } from "@jetbrains/ring-ui-built/components/global/theme"
-import LoaderInline from "@jetbrains/ring-ui-built/components/loader-inline/loader-inline"
 import {ControlsHeightContext, ControlsHeight} from '@jetbrains/ring-ui-built/components/global/controls-height';
+import LoaderInline from "@jetbrains/ring-ui-built/components/loader-inline/loader-inline"
+import { ThemeProvider, useTheme } from "@jetbrains/ring-ui-built/components/global/theme"
 
-import { Widget } from "./Widget"
 import { WidgetConfigForm } from "./ConfigForm"
 import { WidgetContent } from "./Content"
+import { Widget } from "./Widget"
 
 import "@jetbrains/ring-ui-built/components/style.css"
 import "./App.css"

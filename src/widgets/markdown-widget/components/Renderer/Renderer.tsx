@@ -123,15 +123,15 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
   }
 
   if (loading) {
-    return <div className="markdown-embed-loader">Loading...</div>
+    return <div className="markdown-snippet-loader">Loading...</div>
   }
 
   if (!error && !content) {
-    return <div className="markdown-embed-empty">No content to display</div>
+    return <div className="markdown-snippet-empty">No content to display</div>
   }
 
   return (
-    <div className={`markdown-embed-content ${theme === "dark" ? "ring-ui-theme-dark" : "ring-ui-theme-light"}`}>
+    <div className="markdown-snippet-content">
       <Markdown>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
         <div dangerouslySetInnerHTML={{ __html: renderedMarkdown(error ? error : content || "") }} />

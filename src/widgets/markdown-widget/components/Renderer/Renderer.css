@@ -1,58 +1,5 @@
-/* YouTrack-aligned CSS Variables with theme support */
-.markdown-embed-widget {
-  --ring-unit: 8px;
-  --ring-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --ring-font-size: 13px;
-  --ring-line-height: 20px;
-  --content-font-size: 16px;
-  --content-line-height: 24px;
-  --side-spacing: calc(var(--ring-unit) * 2);
-  
-  /* Theme-aware colors with proper light/dark fallbacks */
-  --text-color: var(--ring-text-color, #000000);
-  --secondary-text-color: var(--ring-secondary-color, #5f6368);
-  --error-color: var(--ring-error-color, #d93025);
-  --background-color: var(--ring-content-background-color, #ffffff);
-  --border-color: var(--ring-borders-color, #e0e0e0);
-  --code-background: var(--ring-code-background, #f5f5f5);
-  --blockquote-border: var(--ring-borders-color, #e0e0e0);
-  --table-border: var(--ring-line-color, #e0e0e0);
-  --table-header-background: var(--ring-content-background-color, #f8f9fa);
-}
 
-/* Dark theme overrides */
-.markdown-embed-content.ring-ui-theme-dark {
-  --text-color: var(--ring-text-color, #ffffff);
-  --secondary-text-color: var(--ring-secondary-color, #8b949e);
-  --error-color: var(--ring-error-color, #f85149);
-  --background-color: var(--ring-content-background-color, #0d1117);
-  --border-color: var(--ring-borders-color, #30363d);
-  --code-background: var(--ring-code-background, #161b22);
-  --blockquote-border: var(--ring-borders-color, #30363d);
-  --table-border: var(--ring-line-color, #30363d);
-  --table-header-background: var(--ring-content-background-color, #161b22);
-}
-
-/* Light theme explicit overrides */
-.markdown-embed-content.ring-ui-theme-light {
-  --text-color: var(--ring-text-color, #24292f);
-  --secondary-text-color: var(--ring-secondary-color, #656d76);
-  --error-color: var(--ring-error-color, #d1242f);
-  --background-color: var(--ring-content-background-color, #ffffff);
-  --border-color: var(--ring-borders-color, #d0d7de);
-  --code-background: var(--ring-code-background, #f6f8fa);
-  --blockquote-border: var(--ring-borders-color, #d0d7de);
-  --table-border: var(--ring-line-color, #d0d7de);
-  --table-header-background: var(--ring-content-background-color, #f6f8fa);
-}
-
-.compactUiMode .markdown-embed-widget {
-  --content-font-size: 14px;
-  --content-line-height: var(--ring-line-height);
-  --smaller-side-spacing: calc(var(--side-spacing) - 2px);
-}
-
-.markdown-embed-loader {
+.markdown-snippet-loader {
   display: flex;
   justify-content: center;
   padding: calc(var(--ring-unit) * 3) 0;
@@ -61,18 +8,7 @@
   line-height: var(--ring-line-height);
 }
 
-.markdown-embed-error {
-  color: var(--error-color);
-  padding: calc(var(--ring-unit) * 2);
-  border-radius: 4px;
-  background-color: color-mix(in srgb, var(--error-color) 10%, transparent);
-  margin: calc(var(--ring-unit) * 2);
-  font-family: var(--ring-font-family);
-  font-size: var(--content-font-size);
-  line-height: var(--content-line-height);
-}
-
-.markdown-embed-empty {
+.markdown-snippet-empty {
   color: var(--secondary-text-color);
   text-align: center;
   padding: calc(var(--ring-unit) * 3);
@@ -89,7 +25,7 @@
   margin: 0;
 }
 
-.markdown-embed-content {
+.markdown-snippet-content {
   word-break: break-word;
   font-family: var(--ring-font-family);
   font-size: var(--ring-font-size);
@@ -97,32 +33,32 @@
 }
 
 /* Fix markdown list styling with proper offsets */
-.markdown-embed-content ul,
-.markdown-embed-content ol {
+.markdown-snippet-content ul,
+.markdown-snippet-content ol {
   margin: 0.5em 0;
   padding-left: 2em;
 }
 
-.markdown-embed-content ul ul,
-.markdown-embed-content ol ol,
-.markdown-embed-content ul ol,
-.markdown-embed-content ol ul {
+.markdown-snippet-content ul ul,
+.markdown-snippet-content ol ol,
+.markdown-snippet-content ul ol,
+.markdown-snippet-content ol ul {
   margin: 0.25em 0;
   padding-left: 1.5em;
 }
 
-.markdown-embed-content li {
+.markdown-snippet-content li {
   margin: 0.25em 0;
   line-height: 1.5;
 }
 
 /* Fix paragraph spacing in lists */
-.markdown-embed-content li p {
+.markdown-snippet-content li p {
   margin: 0.25em 0;
 }
 
 /* Ensure mermaid diagrams are properly styled */
-.markdown-embed-content .mermaid {
+.markdown-snippet-content .mermaid {
   text-align: center;
   margin: 1em 0;
   background-color: var(--background-color);
@@ -131,33 +67,33 @@
 }
 
 /* Ensure mermaid text is visible */
-.markdown-embed-content .mermaid svg {
+.markdown-snippet-content .mermaid svg {
   max-width: 100%;
   height: auto;
 }
 
-.markdown-embed-content .mermaid .node rect,
-.markdown-embed-content .mermaid .node circle,
-.markdown-embed-content .mermaid .node ellipse,
-.markdown-embed-content .mermaid .node polygon {
+.markdown-snippet-content .mermaid .node rect,
+.markdown-snippet-content .mermaid .node circle,
+.markdown-snippet-content .mermaid .node ellipse,
+.markdown-snippet-content .mermaid .node polygon {
   fill: var(--code-background) !important;
   stroke: var(--border-color) !important;
 }
 
-.markdown-embed-content .mermaid .node .label,
-.markdown-embed-content .mermaid .edgeLabel,
-.markdown-embed-content .mermaid .cluster-label {
+.markdown-snippet-content .mermaid .node .label,
+.markdown-snippet-content .mermaid .edgeLabel,
+.markdown-snippet-content .mermaid .cluster-label {
   color: var(--text-color) !important;
   fill: var(--text-color) !important;
   font-family: var(--ring-font-family) !important;
 }
 
-.markdown-embed-content .mermaid .edgePath .path {
+.markdown-snippet-content .mermaid .edgePath .path {
   stroke: var(--text-color) !important;
 }
 
 /* Improve code block styling - use theme-aware colors */
-.markdown-embed-content pre {
+.markdown-snippet-content pre {
   background-color: var(--code-background);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -166,7 +102,7 @@
   color: var(--text-color);
 }
 
-.markdown-embed-content code {
+.markdown-snippet-content code {
   background-color: var(--code-background);
   border: 1px solid var(--border-color);
   border-radius: 3px;
@@ -176,34 +112,34 @@
 }
 
 /* Override highlight.js styles to ensure proper theming */
-.markdown-embed-content pre code {
+.markdown-snippet-content pre code {
   background-color: transparent;
   border: none;
   padding: 0;
 }
 
 /* Improve table styling */
-.markdown-embed-content table {
+.markdown-snippet-content table {
   border-collapse: collapse;
   width: 100%;
   margin: 1em 0;
 }
 
-.markdown-embed-content th,
-.markdown-embed-content td {
+.markdown-snippet-content th,
+.markdown-snippet-content td {
   border: 1px solid var(--table-border);
   padding: 6px 13px;
   text-align: left;
 }
 
-.markdown-embed-content th {
+.markdown-snippet-content th {
   background-color: var(--table-header-background);
   font-weight: 600;
   color: var(--text-color);
 }
 
 /* Improve blockquote styling */
-.markdown-embed-content blockquote {
+.markdown-snippet-content blockquote {
   border-left: 4px solid var(--blockquote-border);
   padding-left: 16px;
   margin: 1em 0;

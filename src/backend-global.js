@@ -1,9 +1,6 @@
 const entities = require("@jetbrains/youtrack-scripting-api/entities");
 
-const isArticle = (entityId) => {
-  const [, i, a] = entityId.split("-");
-  return i === "A" && a;
-};
+const isArticle = (entityId) => entityId.split("-")[1] === "A";
 
 exports.httpHandler = {
   endpoints: [
@@ -48,7 +45,7 @@ exports.httpHandler = {
           ctx.response.code = 500;
           ctx.response.json({
             message: `Error in workflow rule: "${workflow}/${ruleName}.js"`,
-            stack: error.stack.replace(/scripts\//g, "/"),
+            stack: error.stack?.replace(/scripts\//g, "/") || error.message || "",
           });
         }
       },

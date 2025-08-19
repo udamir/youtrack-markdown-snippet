@@ -1,4 +1,14 @@
-/**
+/** 
+ * @import { Issue, Article, User } from "@jetbrains/youtrack-scripting-api/entities" 
+ * 
+ * @typedef {{
+ *  article: Article | null;                          // Article if snippet is in article
+ *  issue: Issue | null;                              // Issue if snippet is in issue
+ *  currentUser: User | null;                         // Current user
+ *  refreshCount: number                              // Refresh count
+ *  userInput?: string | number | boolean             // User input value
+ * }} SnippetRuleContext
+ * 
  * @typedef {{
  *  name: string;                                         // Name of the snippet
  *  title: string;                                        // Title of the snippet
@@ -7,15 +17,7 @@
  *    enum?: string[] | number[];                         // Enum values for the user input
  *    description: string;                                // Description of the user input
  *  };
- *  action: (
- *    ctx: {
- *      article: Article | null;                          // Article if snippet is in article
- *      issue: Issue | null;                              // Issue if snippet is in issue
- *      currentUser: User | null;                         // Current user
- *      userInput?: string | number | boolean             // User input value
- *      refreshCount?: number                             // Refresh count
- *    }
- *  ) => string;                                          // Action to be performed
+ *  action: (ctx: SnippetRuleContext) => string;          // Action to be performed
  * }} SnippetRule
  */
 
@@ -71,3 +73,22 @@ class Snippet {
 }
 
 exports.Snippet = Snippet;
+
+// Example of a snippet
+//
+// const { Snippet } = require('../markdown-snippet/snippet');
+//
+// exports.rule = Snippet.forMarkdown({
+//   title: "Test snippet with parameter",
+//   name: "test-snippet",
+//   userInput: {
+//   	type: "string",
+//     enum: ["foo", "bar", "baz"],
+//     description: "Select an option"
+//   },
+//   action: (ctx) => {
+//     const params = `User: ${ctx.currentUser.login}\nUser input: "${ctx.userInput}"\nRefresh count: ${ctx.refreshCount}`;
+//     const data = ctx.issue ? `Issue: ${ctx.issue.id}\n${params}` : `Article: ${ctx.article.id}\n${params}`;
+//     return `\`\`\`\n${data}\n\`\`\``;
+//   }
+// });

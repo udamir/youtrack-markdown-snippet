@@ -56,6 +56,7 @@ export const useYoutrack = <T>(configurable = false) => {
     if (widgetApi.current) {
       await widgetApi.current.storeConfig(config)
       setConfig(config)
+      setRefreshTrigger(0)
       setIsConfiguring(false)
     }
   }
