@@ -9,12 +9,12 @@
 }
 
 .markdown-snippet-empty {
-  color: var(--secondary-text-color);
+  color: var(--ring-secondary-color);
   text-align: center;
   padding: calc(var(--ring-unit) * 3);
   font-family: var(--ring-font-family);
-  font-size: var(--content-font-size);
-  line-height: var(--content-line-height);
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
   /* Prevent scrollbars for empty content */
   width: 100%;
   height: 100%;
@@ -61,7 +61,7 @@
 .markdown-snippet-content .mermaid {
   text-align: center;
   margin: 1em 0;
-  background-color: var(--background-color);
+  background-color: var(--ring-content-background-color);
   border-radius: 6px;
   padding: 16px;
 }
@@ -76,39 +76,39 @@
 .markdown-snippet-content .mermaid .node circle,
 .markdown-snippet-content .mermaid .node ellipse,
 .markdown-snippet-content .mermaid .node polygon {
-  fill: var(--code-background) !important;
-  stroke: var(--border-color) !important;
+  fill: var(--ring-code-background-color) !important;
+  stroke: var(--ring-borders-color) !important;
 }
 
 .markdown-snippet-content .mermaid .node .label,
 .markdown-snippet-content .mermaid .edgeLabel,
 .markdown-snippet-content .mermaid .cluster-label {
-  color: var(--text-color) !important;
-  fill: var(--text-color) !important;
+  color: var(--ring-text-color) !important;
+  fill: var(--ring-text-color) !important;
   font-family: var(--ring-font-family) !important;
 }
 
 .markdown-snippet-content .mermaid .edgePath .path {
-  stroke: var(--text-color) !important;
+  stroke: var(--ring-text-color) !important;
 }
 
 /* Improve code block styling - use theme-aware colors */
 .markdown-snippet-content pre {
-  background-color: var(--code-background);
-  border: 1px solid var(--border-color);
+  background-color: var(--ring-code-background-color);
+  border: 1px solid var(--ring-borders-color);
   border-radius: 6px;
   padding: 16px;
   overflow-x: auto;
-  color: var(--text-color);
+  color: var(--ring-text-color);
 }
 
 .markdown-snippet-content code {
-  background-color: var(--code-background);
-  border: 1px solid var(--border-color);
+  background-color: var(--ring-code-background-color);
+  border: 1px solid var(--ring-borders-color);
   border-radius: 3px;
   padding: 0.2em 0.4em;
   font-size: 85%;
-  color: var(--text-color);
+  color: var(--ring-text-color);
 }
 
 /* Override highlight.js styles to ensure proper theming */
@@ -127,27 +127,27 @@
 
 .markdown-snippet-content th,
 .markdown-snippet-content td {
-  border: 1px solid var(--table-border);
+  border: 1px solid var(--ring-borders-color);
   padding: 6px 13px;
   text-align: left;
 }
 
 .markdown-snippet-content th {
-  background-color: var(--table-header-background);
+  background-color: var(--ring-selected-background-color);
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--ring-text-color);
 }
 
 /* Improve blockquote styling */
 .markdown-snippet-content blockquote {
-  border-left: 4px solid var(--blockquote-border);
+  border-left: 4px solid var(--ring-borders-color);
   padding-left: 16px;
   margin: 1em 0;
-  color: var(--secondary-text-color);
+  color: var(--ring-secondary-color);
 }
 
 .markdown-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--ring-borders-color);
   padding-bottom: var(--ring-unit);
   margin-bottom: calc(var(--ring-unit) * 2);
 }
@@ -161,8 +161,8 @@
 
 .markdown-body {
   font-family: var(--ring-font-family);
-  font-size: var(--content-font-size);
-  line-height: var(--content-line-height);
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
   margin: var(--ring-unit) 0;
   word-break: break-word;
 }
@@ -182,7 +182,7 @@
   display: table;
   box-sizing: border-box;
   border-spacing: 2px;
-  border-color: gray;
+  border-color: var(--ring-borders-color);
 }
 
 .markdown-body .table-wrapper {

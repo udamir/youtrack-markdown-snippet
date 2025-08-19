@@ -46,7 +46,8 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
 
       if (info === "mermaid") {
         const mermaidId = `mermaid-${Math.random().toString(36).substring(2, 9)}`
-        return `<div class="mermaid" id="${mermaidId}">${token.content}</div>`
+        // Keep original source in a data attribute to allow re-render on theme change
+        return `<div class="mermaid" id="${mermaidId}" data-original="${token.content}"></div>`
       }
 
       // Handle regular code blocks with syntax highlighting
@@ -99,7 +100,8 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
   useEffect(() => {
     if (window.mermaid) {
       window.mermaid.initialize({
-        startOnLoad: true,
+        // We'll trigger rendering manually after DOM updates
+        startOnLoad: false,
         theme: theme === Theme.DARK ? "dark" : "default",
         securityLevel: "loose",
         themeVariables: MERMAID_THEME_CONFIG[theme],
@@ -107,13 +109,22 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
     }
   }, [theme])
 
-  // Re-run Mermaid after content updates to render newly injected diagrams
+  // Re-run Mermaid after content/theme updates to render or re-render diagrams
   useEffect(() => {
     // Ensure DOM is updated before running Mermaid
     requestAnimationFrame(() => {
-      window.mermaid.run()
+      // Reset processed flag and restore original source so Mermaid re-renders with the new theme
+      document.querySelectorAll('.mermaid').forEach(node => {
+        const el = node as HTMLElement
+        el.removeAttribute('data-processed')
+        const source = el.getAttribute('data-original')
+        if (source) {
+          el.textContent = source
+        }
+      })
+      window.mermaid?.run()
     })
-  }, [content])
+  }, [content, theme])
 
   // Use markdown-it to render the content
   const renderedMarkdown = (content: string) => {
@@ -134,7 +145,7 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
 
   return (
     <div className="markdown-snippet-content">
-      <Markdown>
+      <Markdown key={theme}>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
         <div dangerouslySetInnerHTML={{ __html: renderedMarkdown(error ? error : content || "") }} />
       </Markdown>

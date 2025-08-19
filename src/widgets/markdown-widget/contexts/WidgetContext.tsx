@@ -1,6 +1,4 @@
 import { createContext, type RefObject, useContext, type ReactNode } from "react"
-import type Theme from '@jetbrains/ring-ui-built/components/global/theme';
-
 import type { EmbeddableWidgetAPI } from "../../../../@types/globals"
 import type { YoutrackService } from "../services/YoutrackService"
 import { useYoutrackTheme } from "../hooks/useYoutrackTheme";
@@ -10,7 +8,7 @@ export type WidgetContextType = {
   youtrack: YoutrackService
   currentUser?: { id: string; login: string }
   entityId?: string
-  theme: typeof Theme.LIGHT | typeof Theme.DARK
+  theme: ReturnType<typeof useYoutrackTheme>
 }
 
 export type WidgetContextProviderParams = {
