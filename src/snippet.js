@@ -86,9 +86,14 @@ exports.Snippet = Snippet;
 //     enum: ["foo", "bar", "baz"],
 //     description: "Select an option"
 //   },
-//   action: (ctx) => {
-//     const params = `User: ${ctx.currentUser.login}\nUser input: "${ctx.userInput}"\nRefresh count: ${ctx.refreshCount}`;
-//     const data = ctx.issue ? `Issue: ${ctx.issue.id}\n${params}` : `Article: ${ctx.article.id}\n${params}`;
-//     return `\`\`\`\n${data}\n\`\`\``;
+//   action: ({ issue, article, currentUser, userInput, refreshCount }) => {
+//     return [
+//       "```",
+//       `User: ${currentUser.login}`,
+//       issue ? `IssueId: ${issue.id}` : `ArticleId: ${article.id}`,
+//       `User input: ${userInput}`,
+//       `Refresh count": ${refreshCount}`,
+//       "```"
+//     ].join("\n");
 //   }
 // });
