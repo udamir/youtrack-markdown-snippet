@@ -1,7 +1,7 @@
 import { memo, type ReactNode } from "react"
 
 import { WidgetContextProvider } from "../contexts/WidgetContext"
-import { useYoutrack } from "../hooks/useYoutrack"
+import { useYoutrackWidget } from "../hooks/useYoutrackWidget"
 
 export type WidgetConfigurationFormParams<T> = {
   initialConfig: T | null
@@ -42,7 +42,7 @@ export const Widget = memo(
       isConfiguring,
       exitConfigMode: onCancel,
       saveConfig: onSubmit,
-    } = useYoutrack<T>(configurable)
+    } = useYoutrackWidget<T>(configurable)
 
     return isRegistered && widgetApi.current ? (
       <>

@@ -1,12 +1,14 @@
 import { useEffect, memo, useRef } from "react"
 import type { FC } from "react"
+
 import Markdown from "@jetbrains/ring-ui-built/components/markdown/markdown"
-import { useTheme } from "@jetbrains/ring-ui-built/components/global/theme"
+import Theme from "@jetbrains/ring-ui-built/components/global/theme.js"
 import MarkdownIt from "markdown-it"
 
-import "./renderer.css"
-
 import { MERMAID_THEME_CONFIG } from "./markdown.config"
+import { useWidgetContext } from "../../contexts/WidgetContext"
+
+import "./renderer.css"
 
 // HTML escape utility function
 const escapeHtml = (unsafe: string): string => {
@@ -28,7 +30,7 @@ export interface RendererProps {
  * Component for rendering embedded markdown content
  */
 export const RendererComponent: FC<RendererProps> = memo(({ error = "", content, loading = false }) => {
-  const theme = useTheme()
+  const { theme } = useWidgetContext()
   const markdown = useRef<MarkdownIt | null>(null)
 
   useEffect(() => {
@@ -98,7 +100,7 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
     if (window.mermaid) {
       window.mermaid.initialize({
         startOnLoad: true,
-        theme: theme === "dark" ? "dark" : "default",
+        theme: theme === Theme.DARK ? "dark" : "default",
         securityLevel: "loose",
         themeVariables: MERMAID_THEME_CONFIG[theme],
       })

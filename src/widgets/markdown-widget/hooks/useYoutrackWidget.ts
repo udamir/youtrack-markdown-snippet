@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import type { EmbeddableWidgetAPI } from "../../../../@types/globals"
 import { YoutrackService } from "../services/YoutrackService"
 
-export const useYoutrack = <T>(configurable = false) => {
+export const useYoutrackWidget = <T>(configurable = false) => {
   const widgetApi = useRef<EmbeddableWidgetAPI | null>(null)
   const youtrack = useRef<YoutrackService | null>(null)
   const currentUser = useRef<{ id: string, login: string } | null>(null)
