@@ -25,40 +25,30 @@ exports.httpHandler = {
       method: "GET",
       path: "snippets",
       handle: (ctx) => {
-        const baseUrl = ctx.globalStorage.extensionProperties.baseUrl;
-        const apiKey = ctx.globalStorage.extensionProperties.apiKey;
+        const baseUrl = ctx.request.headers?.find(({ name }) => name === "Host")?.value;
+        const connection = new http.Connection(`https://${baseUrl}`);
+        connection.bearerAuth(ctx.settings.apiKey);
 
-        if (!baseUrl || !apiKey) {
-          ctx.response.code = 500;
-          ctx.response.json({
-            message: "Missing baseUrl or apiKey",
-          });
-          return;
-        }
+        const params = { fields: "id,name,rules(id,name,title,type)", $top: "-1", query: "language:JS,mps" };
+        const response = connection.getSync("/api/admin/workflows", params);
 
-        const connection = new http.Connection(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`, null, 30000);
-        connection.bearerAuth(apiKey);
-
-        const response = connection.getSync("/api/admin/workflows", { fields: "id,name,rules(id,name,title,type)", $top: "-1", query: "language:JS,mps" });
-        const json = JSON.parse(response.response);
+        const data = JSON.parse(response.body);
         if (!response.isSuccess) {
           ctx.response.code = 500;
-          ctx.response.json({
-            message: `Cannot fetch list of snippets: ${json.message}`,
-          });
+          ctx.response.json({ message: data.error });
           return;
         }
 
         const snippets = [];
-        for (const workflow of json) {
+        for (const workflow of data) {
           for (const rule of workflow.rules) {
             if (rule.title?.startsWith("snippet:") && rule.type === "StatelessActionRule") {
-              snippets.push({ title: rule.title.slice(8), workflow: workflow.name, rule: rule.name })
+              snippets.push({ title: rule.title.slice(8), workflow: workflow.name, rule: rule.name });
             }
           }
         }
 
-        ctx.response.json({ snippets });
+        ctx.response.json(snippets);
       }
     },
     {

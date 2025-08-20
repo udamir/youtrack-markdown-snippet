@@ -25,17 +25,18 @@ class Snippet {
   /**
    * Embeds a snippet into the markdown content
    * @param {SnippetRule} rule
+   * @returns {Snippet}
    */
   static forMarkdown(rule) {
     const { title, name, action, userInput } = rule;
 
-   if (!title || !name || !action) {
-     throw new Error("Snippet rule must have title, name and action");
-   }
+    if (!title || !name || !action) {
+      throw new Error("Snippet rule must have title, name and action");
+    }
 
-   if (typeof action !== "function") {
-     throw new Error("Snippet rule action must be a function");
-   }
+    if (typeof action !== "function") {
+      throw new Error("Snippet rule action must be a function");
+    }
 
     if (userInput) {
       if (!["string", "number", "boolean", "text"].includes(userInput.type)) {
@@ -62,8 +63,8 @@ class Snippet {
       title: `snippet:${title}`,
       command: `snippet:${name}`,
       action: action,
-      guard: ({ setUserInput }) => {
-        setUserInput(userInput);
+      guard: (/** @type {any} */ { setUserInput }) => {
+        setUserInput?.(userInput);
         return false;
       },
       ruleType: "action",

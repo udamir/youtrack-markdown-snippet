@@ -229,7 +229,8 @@ export interface YouTrackGlobalContext extends YouTrackContextBase {
   // Global scope - no specific entity
   globalStorage: {
     extensionProperties: Record<string, number | string | boolean | Issue | Set<Issue>>
-  }
+  },
+  settings: Record<string, any>
 }
 
 // Union type for all possible contexts

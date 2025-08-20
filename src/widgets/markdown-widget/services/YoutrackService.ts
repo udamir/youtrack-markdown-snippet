@@ -122,31 +122,20 @@ export class YoutrackService {
   }
 
   public getSnippets = async (): Promise<Snippet[]> => {
-    const [data, error] = await tryCatch(
-      this.youtrack.Admin.Workflows.getWorkflows({
-        fields: "id,name,rules(id,name,title,type)",
-        $top: -1,
-        query: "language:JS,mps",
-      }),
+    const [snippets, error] = await tryCatch<Snippet[], { data: SnippetError, code: number }>(
+      this.host.fetchApp<Snippet[]>("backend-global/snippets", { scope: false }),
     )
     if (error) {
-      throw new Error(`Cannot fetch workflows: ${JSON.stringify(error)}`)
-    }
-
-    const snippets = []
-    for (const workflow of data) {
-      for (const rule of workflow.rules) {
-        if (rule.title?.startsWith("snippet:") && rule.type === "StatelessActionRule") {
-          snippets.push({ title: rule.title.slice(8), workflow: workflow.name, rule: rule.name })
-        }
+      if (error.data.message === "Unauthorized") {
+        throw new Error("YouTrack API key is not valid. Please check Markdown Snippet widget settings.")
       }
+      throw new Error(`Cannot fetch snippets: ${error.data.message}`)
     }
-
     return snippets
   }
 
   public getSnippet = async (workflow: string, rule: string, userInput = "", login = "", entityId = "", refreshCount = 0) => {
-    return tryCatch<SnippetContent | SnippetInput, { data: SnippetError }>(
+    return tryCatch<SnippetContent | SnippetInput, { data: SnippetError, code: number }>(
       this.host.fetchApp<SnippetContent | SnippetInput>("backend-global/snippet", { query: { workflow, rule, userInput, login, entityId, refreshCount }, scope: false }),
     )
   }

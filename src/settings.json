@@ -1,0 +1,16 @@
+{
+  "$id": "https://youtrack.demo.app.com/settings.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Markdown Snippet widget settings",
+  "properties": {
+    "apiKey": {
+      "title": "API key",
+      "description": "Youtrack Admin API key with access to workflow scripts",
+      "type": "string",
+      "writeOnly": true,
+      "format": "secret"
+    }
+  },
+  "required": []
+}

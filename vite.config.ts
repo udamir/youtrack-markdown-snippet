@@ -17,7 +17,7 @@ export default defineConfig({
           dest: '.'
         },
         {
-          src: '*.js',
+          src: '*.*',
           dest: '.'
         },
         {
