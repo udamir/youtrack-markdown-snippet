@@ -1,4 +1,6 @@
-/**
+/** 
+ * @import { Issue, Article, User } from "@jetbrains/youtrack-scripting-api/entities" 
+ * 
  * @typedef {{
  *  name: string;                                         // Name of the snippet
  *  title: string;                                        // Title of the snippet
@@ -27,13 +29,13 @@ class Snippet {
   static forMarkdown(rule) {
     const { title, name, action, userInput } = rule;
 
-    if (!title || !name || !action) {
-      throw new Error("Snippet rule must have title, name and action");
-    }
+   if (!title || !name || !action) {
+     throw new Error("Snippet rule must have title, name and action");
+   }
 
-    if (typeof action !== "function") {
-      throw new Error("Snippet rule action must be a function");
-    }
+   if (typeof action !== "function") {
+     throw new Error("Snippet rule action must be a function");
+   }
 
     if (userInput) {
       if (!["string", "number", "boolean", "text"].includes(userInput.type)) {
@@ -71,3 +73,27 @@ class Snippet {
 }
 
 exports.Snippet = Snippet;
+
+// Example of a snippet
+//
+// const { Snippet } = require('../markdown-snippet/snippet');
+//
+// exports.rule = Snippet.forMarkdown({
+//   title: "Test snippet with parameter",
+//   name: "test-snippet",
+//   userInput: {
+//   	type: "string",
+//     enum: ["foo", "bar", "baz"],
+//     description: "Select an option"
+//   },
+//   action: ({ issue, article, currentUser, userInput, refreshCount }) => {
+//     return [
+//       "```",
+//       `User: ${currentUser.login}`,
+//       issue ? `IssueId: ${issue.id}` : `ArticleId: ${article.id}`,
+//       `User input: ${userInput}`,
+//       `Refresh count": ${refreshCount}`,
+//       "```"
+//     ].join("\n");
+//   }
+// });

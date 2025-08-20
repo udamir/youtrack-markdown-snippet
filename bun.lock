@@ -17,6 +17,11 @@
         "@eslint/js": "^9.13.0",
         "@jetbrains/eslint-config": "^6.0.2",
         "@jetbrains/youtrack-apps-tools": "^0.0.1",
+<<<<<<< Updated upstream
+=======
+        "@jetbrains/youtrack-scripting-api": "^2022.1.46592",
+        "@types/highlightjs": "^9.12.6",
+>>>>>>> Stashed changes
         "@types/markdown-it": "^14.1.2",
         "@types/node": "^24.0.13",
         "@types/react": "^18.3.3",
@@ -34,6 +39,7 @@
         "typescript-eslint": "^8.0.1",
         "vite": "^6.0.1",
         "vite-plugin-static-copy": "^2.2.0",
+        "youtrack-workflow-api-types": "^0.2.2",
       },
     },
   },
@@ -167,6 +173,8 @@
     "@jetbrains/ring-ui-built": ["@jetbrains/ring-ui-built@7.0.55", "", { "dependencies": { "@jetbrains/icons": "^5.10.0", "change-case": "^4.1.1", "classnames": "^2.5.1", "combokeys": "^3.0.1", "date-fns": "^4.1.0", "dequal": "^2.0.3", "element-resize-detector": "^1.2.4", "fastdom": "^1.0.12", "focus-trap": "^7.6.5", "highlight.js": "^10.7.2", "just-debounce-it": "^3.2.0", "memoize-one": "^6.0.0", "react-movable": "^3.4.1", "react-virtualized": "^9.22.6", "react-waypoint": "^10.3.0", "scrollbar-width": "^3.1.1", "simply-uuid": "^1.0.1", "sniffr": "^1.3.2", "util-deprecate": "^1.0.2" }, "peerDependencies": { "@types/react": ">=18.0.0", "@types/react-dom": ">=18.0.0", "core-js": ">=3.0.0", "react": ">=18.0.0", "react-dom": ">=18.0.0" }, "optionalPeers": ["@types/react", "@types/react-dom"] }, "sha512-XUS9GnaqRz1hfO128pbsZE4Rd8eQ6pzWyVy3+t+7ufRxBtuUSO4IMCXsWfl1Y59ylYs4sIx1IGiLZ3CY6/neQw=="],
 
     "@jetbrains/youtrack-apps-tools": ["@jetbrains/youtrack-apps-tools@0.0.1", "", { "dependencies": { "ajv": "^8.17.1", "ajv-formats": "^3.0.1", "minimist": "1.2.8", "open": "^10.1.0", "tslib": "^2.7.0", "zip-lib": "^1.0.4" }, "bin": { "youtrack-app": "bin/youtrack-app" } }, "sha512-Pdmz7drIIn3OIIjHXZNsSEs8a1c5SLzMRlLdAL3CKx/jihSr0auE5Y9QyI+Mx8DgNJcFMevfl654fsEBO6A++g=="],
+
+    "@jetbrains/youtrack-scripting-api": ["@jetbrains/youtrack-scripting-api@2022.1.46592", "", {}, "sha512-UTw1OQkZpPahn8y90DqHkBGjit8jsPZbA3aXncyXHUUUkwJpq45LUoVX4iqUqnqpw86hod27kYfvblzrGoL7YA=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.12", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-OuLGC46TjB5BbN1dH8JULVVZY4WTdkF7tV9Ys6wLL1rubZnCMstOhNHueU5bLCrnRuDhKPDM4g6sw4Bel5Gzqg=="],
 
@@ -939,6 +947,8 @@
     "yocto-queue": ["yocto-queue@0.1.0", "", {}, "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="],
 
     "youtrack-client": ["youtrack-client@0.7.1", "", { "peerDependencies": { "axios": "^1.7.7" } }, "sha512-56Ozvcb0qfpKmFYsDJ1n+HWkkDjx6pCKw26Wc585U5yzCMByUTxCuNwisBNNVBM7KDU2h+26r+GdKwGFcgamHg=="],
+
+    "youtrack-workflow-api-types": ["youtrack-workflow-api-types@0.2.2", "", {}, "sha512-AaBMHqPpX1aTb4MW29+XUNWcPYcSKOWH7es26FvF3ihg4mGRuzjxfbiJbKY9NCEI76ZOKnhurrPRdzhc1OIkqg=="],
 
     "zip-lib": ["zip-lib@1.1.2", "", { "dependencies": { "yauzl": "^3.2.0", "yazl": "^3.3.1" } }, "sha512-PdPYnjxRcbQ7UAhj6Cu8rggpHXFU/6Slhoy2vuA5E/52+i6aSr+9rWup6ll/Mr0mAxV9/YkRni9xGzVc/qh4rA=="],
 
