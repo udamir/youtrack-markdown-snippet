@@ -1,3 +1,5 @@
+/** @import { Issue } from "@jetbrains/youtrack-scripting-api/entities" */
+
 // YouTrack Entity Types for Context
 export interface YouTrackIssue {
   id: string;
@@ -17,6 +19,7 @@ export interface YouTrackIssue {
   tags: YouTrackTag[];
   comments: YouTrackComment[];
   attachments: YouTrackAttachment[];
+  extensionProperties: Record<string, number | string | boolean | Issue | Set<Issue>>
 }
 
 export interface YouTrackProject {
@@ -207,7 +210,7 @@ export interface YouTrackContextBase {
 }
 
 export interface YouTrackIssueContext extends YouTrackContextBase {
-  issue: YouTrackIssue;
+  issue: Issue;
 }
 
 export interface YouTrackProjectContext extends YouTrackContextBase {
@@ -224,6 +227,10 @@ export interface YouTrackUserContext extends YouTrackContextBase {
 
 export interface YouTrackGlobalContext extends YouTrackContextBase {
   // Global scope - no specific entity
+  globalStorage: {
+    extensionProperties: Record<string, number | string | boolean | Issue | Set<Issue>>
+  },
+  settings: Record<string, any>
 }
 
 // Union type for all possible contexts

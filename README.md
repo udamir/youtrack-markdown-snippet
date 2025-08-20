@@ -45,6 +45,15 @@ Manual installation steps:
 4. Preview selected content in real-time.
 5. Save the configuration to embed the content.
 
+### Configure widget settings (required for workflow snippets)
+
+To list and execute workflow snippets, the widget needs a YouTrack API key with admin permissions that can access workflow scripts.
+
+1. Create new Admin API Token for Youtrack: Profile > Account security > New token...
+2. Open Administration > Apps > Markdown Snippet Widget > Settings
+3. Set `API key` with created token.
+4. Save settings.
+
 ## Workflow snippet example
 
 Add this snippet to your workflow (Administration > Workflows) and it automatically appears in the widget configuration dialog.

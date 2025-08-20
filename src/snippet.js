@@ -62,8 +62,8 @@ class Snippet {
       title: `snippet:${title}`,
       command: `snippet:${name}`,
       action: action,
-      guard: ({ setUserInput }) => {
-        setUserInput(userInput);
+      guard: (/** @type {any} */ { setUserInput }) => {
+        setUserInput?.(userInput);
         return false;
       },
       ruleType: "action",
