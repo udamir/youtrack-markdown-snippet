@@ -6,7 +6,7 @@ A YouTrack Widget that allows you to embed markdown content from different sourc
 
 - __Static content embed__: embed markdown from any Issue or Knowledge Base Article
 - __Field/section selection__: choose any Text custom field and optionally a specific heading section
-- __Dynamic Snippets__: render workflow-defined scripts (Snippets.forMarkdown)
+- __Dynamic Snippets__: render workflow-defined scripts (Snippet.forMarkdown)
 - __Snippet parameters__: supports enum parameters (dropdown) and free-form text parameters (textarea)
 - __Real-time preview__: live preview of the rendered content
 - __Mermaid + code highlighting__: support diagram rendering and syntax highlighting
@@ -26,7 +26,7 @@ A YouTrack Widget that allows you to embed markdown content from different sourc
 
 ## Installation 
 
-Install plugin via JetBrains marketplace https://plugins.jetbrains.com/plugin/28224
+Install the app from JetBrains Marketplace: https://plugins.jetbrains.com/plugin/28224
 
 Manual installation steps:
 1. Pack `markdown-snippet.zip` file from source code
@@ -49,7 +49,7 @@ Manual installation steps:
 
 To list and execute workflow snippets, the widget needs a YouTrack API key with admin permissions that can access workflow scripts.
 
-1. Create new Admin API Token for Youtrack: Profile > Account security > New token...
+1. Create new Admin API Token for YouTrack: Profile > Account security > New token...
 2. Open Administration > Apps > Markdown Snippet Widget > Settings
 3. Set `API key` with created token.
 4. Save settings.
@@ -75,7 +75,7 @@ exports.rule = Snippet.forMarkdown({
       `User: ${currentUser.login}`,
       issue ? `IssueId: ${issue.id}` : `ArticleId: ${article.id}`,
       `User input: ${userInput}`,
-      `Refresh count": ${refreshCount}`,
+      `Refresh count: ${refreshCount}`,
       "```"
     ].join("\n");
   }
@@ -84,6 +84,32 @@ exports.rule = Snippet.forMarkdown({
 
 > Note that due to YouTrack caching, updating of workflow snippets may take a few minutes to take effect.
 > Workaround: open `/markdown-snippet/backend-global.js` make a tiny change (add whitespace at the end of the file) and `Save` file. This will trigger a refresh of cache.
+
+### Debugging workflow snippet
+
+To debug a snippet before releasing it, add a `debug` property to the snippet rule. In debug mode the snippet is hidden from the widget configuration dialog and is available only as a command guarded by your `guard` function. The command name is prefixed with `debug-snippet:`. You can also provide default `userInput`, `entityType` ("Issue" | "Article"), and optional `refreshCount` passed into your `action`.
+
+Example of snippet in workflow:
+```js
+exports.rule = Snippet.forMarkdown({
+  title: "Snippet in debug mode",
+  name: "snippet-in-debug-mode",
+  userInput: {
+    type: "string",
+    enum: ["foo", "bar", "baz"],
+    description: "Select an option"
+  },
+  action: ({ userInput }) => `provided userInput: ${userInput}`,
+  debug: {
+    guard: ({ currentUser }) => currentUser?.login === "admin",
+    userInput: "foo",
+    entityType: "Article",
+    refreshCount: 0
+  }
+});
+```
+
+Log in as an admin user and execute the command `debug-snippet:snippet-in-debug-mode` in any Article (or Issue depending on `entityType`). The snippet will run and save the result to the article content when `entityType` is "Article"; otherwise it saves to the issue description.
 
 ## Development
 

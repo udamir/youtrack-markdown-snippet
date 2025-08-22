@@ -10,7 +10,7 @@
  * }} SnippetRuleContext
  * 
  * @typedef {{
- *  name: string;                                         // Name of the snippet
+ *  name: string;                                         // Name of the snippet, should be unique in YouTrack
  *  title: string;                                        // Title of the snippet
  *  userInput?: {
  *    type: "string" | "number" | "boolean" | "text";     // Type of the user input
@@ -18,6 +18,12 @@
  *    description: string;                                // Description of the user input
  *  };
  *  action: (ctx: SnippetRuleContext) => string;          // Action to be performed
+ *  debug?: {
+ *    guard?: (ctx: SnippetRuleContext) => boolean;       // Guard to run snippet in debug mode
+ *    userInput?: string | number | boolean;              // User input value to run snippet in debug mode
+ *    entityType?: "Issue" | "Article";                   // Entity type to run snippet in, default is "Issue"
+ *    refreshCount?: number;                              // Refresh count to run snippet in debug mode
+ *  }
  * }} SnippetRule
  */
 
@@ -27,7 +33,7 @@ class Snippet {
    * @param {SnippetRule} rule
    */
   static forMarkdown(rule) {
-    const { title, name, action, userInput } = rule;
+    const { title, name, action, userInput, debug } = rule;
 
     if (!title || !name || !action) {
       throw new Error("Snippet rule must have title, name and action");
@@ -59,15 +65,23 @@ class Snippet {
     }
 
     return {
-      title: `snippet:${title}`,
-      command: `snippet:${name}`,
-      action: action,
-      guard: (/** @type {any} */ { setUserInput }) => {
+      title: `${debug ? "debug-" : ""}snippet:${title}`,
+      command: `${debug ? "debug-" : ""}snippet:${name}`,
+      action: debug ? (/** @type {any} */ ctx) => {
+        const result = action({ ...ctx, userInput: debug.userInput, refreshCount: debug.refreshCount ?? 0 });
+        if (debug.userInput === "Article") {
+          ctx.article.content = result;
+        } else {
+          ctx.issue.description = result;
+        }
+      } : action,
+      guard: (/** @type {any} */ { setUserInput, ...rest }) => {
         setUserInput?.(userInput);
-        return false;
+
+        return debug?.guard ? debug.guard({ ...rest, userInput: debug.userInput }) : false;
       },
       ruleType: "action",
-      target: "Issue",
+      target: debug?.entityType || "Issue",
     };
   }
 }
@@ -97,3 +111,37 @@ exports.Snippet = Snippet;
 //     ].join("\n");
 //   }
 // });
+
+
+// Example of a snippet with debug
+//
+// const { Snippet } = require('../markdown-snippet/snippet');
+//
+// exports.rule = Snippet.forMarkdown({
+//   title: "Test snippet with parameter",
+//   name: "test-snippet",
+//   userInput: {
+//   	type: "string",
+//     enum: ["foo", "bar", "baz"],
+//     description: "Select an option"
+//   },
+//   action: ({ issue, article, currentUser, userInput, refreshCount }) => {
+//     return [
+//       "```",
+//       `User: ${currentUser.login}`,
+//       issue ? `IssueId: ${issue.id}` : `ArticleId: ${article.id}`,
+//       `User input: ${userInput}`,
+//       `Refresh count": ${refreshCount}`,
+//       "```"
+//     ].join("\n");
+//   },
+//   debug: {
+//     entityType: "Article",                   // Snippet can be run in article
+//     guard: ({ currentUser }) => {
+//       return currentUser.login === "admin";  // Admin can run command "snippet:test-snippet" in any article
+//     },
+//     userInput: "foo",                        // User input value to run snippet in debug mode
+//   }
+// });
+//
+
