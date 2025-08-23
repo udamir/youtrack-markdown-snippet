@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/youtrack-app.json",
   "name": "markdown-snippet",
   "title": "Markdown Snippet widget",
-  "description": "This widget allows to embed markdown snippets from article/issue parts or custom workflow scripts into markdown content",
+  "description": "This Widget allows you to embed content from different sources (issues, articles, custom scripts) directly into other YouTrack markdown",
   "vendor": {
     "name": "Damir Yusipov",
     "url": "https://github.com/udamir"
@@ -19,7 +19,7 @@
       "indexPath": "markdown-widget/index.html",
       "extensionPoint": "MARKDOWN",
       "iconPath": "markdown-widget/icon.svg",
-      "description": "Embed markdown snippets from article/issue parts or custom workflow scripts into markdown content",
+      "description": "Embed content from different issues, articles or custom scripts directly into other YouTrack markdown",
       "settingsSchemaPath": "markdown-widget/settings.json",
       "defaultDimensions": {
         "height": "480px",
