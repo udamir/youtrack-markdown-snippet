@@ -1,5 +1,12 @@
 # YouTrack Markdown Snippet
 
+## [1.5.0] - 2025-08-23
+
+### New Features
+- Dynamic enum resolvers for snippet userInput (function returning options based on context)
+- Required user input support; prompts when not provided
+- Boolean input support: added a Toggle control for boolean snippet parameters in the config form
+
 ## [1.4.0] - 2025-08-22
 
 ### New Features
@@ -24,4 +31,3 @@ First public release
 - **Mermaid + code highlighting**: support diagram rendering and syntax highlighting
 - **Light/Dark theme aware**: styles align with YouTrack themes
 - **Seamless integration**: content renders as native markdown
-

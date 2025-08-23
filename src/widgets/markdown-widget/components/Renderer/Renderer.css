@@ -111,6 +111,13 @@
   color: var(--ring-text-color);
 }
 
+/* Remove extra top spacing when a code block is the first element
+   Ring UI applies margin-top to `.ring-markdown-markdown pre:first-child` */
+.markdown-snippet-content .ring-markdown-markdown pre:first-child,
+.markdown-snippet-content .ring-markdown__markdown pre:first-child {
+  margin-top: 0 !important;
+}
+
 /* Override highlight.js styles to ensure proper theming */
 .markdown-snippet-content pre code {
   background-color: transparent;

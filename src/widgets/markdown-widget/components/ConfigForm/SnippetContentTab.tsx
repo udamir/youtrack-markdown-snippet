@@ -5,6 +5,7 @@ import LoaderInline from "@jetbrains/ring-ui-built/components/loader-inline/load
 import type { SelectItem } from "@jetbrains/ring-ui-built/components/select/select"
 import Select from "@jetbrains/ring-ui-built/components/select/select"
 import Input, { Size } from "@jetbrains/ring-ui-built/components/input/input"
+import Toggle, { Size as ToggleSize } from "@jetbrains/ring-ui-built/components/toggle/toggle"
 
 import type { Snippet, SnippetInput } from "../../services/YoutrackService"
 import { useWidgetContext } from "../../contexts/WidgetContext"
@@ -50,7 +51,7 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
 
     if ("content" in snippet && "title" in snippet) {
       updateConfig({
-        title: `${selectedSnippet.title}${param ? ` - ${param}` : ""}`,
+        title: `${selectedSnippet.title}${param ? ` - ${snippet.input?.description || "Parameter"}: ${param}` : ""}`,
         snippetWorkflow: workflow,
         snippetRule: rule,
         snippetParam: param,
@@ -123,7 +124,7 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
 
         {input && (
           <div className="section-select-row">
-            <label htmlFor="param-input">{input.description || "Parameter"}</label>
+            {input && input.type !== "boolean" && <label htmlFor="param-input">{input.description || "Parameter"}</label>}
             {input?.enum?.length ? (
               <Select
                 id="param-select"
@@ -145,6 +146,15 @@ export const SnippetContentTab: React.FC<SnippetContentTabProps> = ({ initialCon
                 style={{ height: "48px" }}
                 placeholder="Enter text..."
               />
+            ) : input.type === "boolean" ? (
+              <div style={{ paddingTop: 8 }}>
+                <Toggle
+                  checked={param === "true"}
+                  onChange={(e) => setParam((e.target as HTMLInputElement).checked ? "true" : "false")}
+                  size={ToggleSize.Size20}
+                  leftLabel={input.description}
+                />
+              </div>
             ) : (
               <Input
                 id="param-input"

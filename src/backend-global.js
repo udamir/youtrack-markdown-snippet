@@ -1,3 +1,4 @@
+/** @import { ActionRule, SnippetUserInput } from "./snippet" */
 const entities = require("@jetbrains/youtrack-scripting-api/entities");
 const http = require("@jetbrains/youtrack-scripting-api/http");
 
@@ -60,28 +61,34 @@ exports.httpHandler = {
         const workflow = ctx.request.getParameter("workflow") || "";
         const ruleName = ctx.request.getParameter("rule") || "";
         const userInput = ctx.request.getParameter("userInput") || "";
-        const refreshCount = ctx.request.getParameter("refreshCount") || 0;
+        const refreshCount = Number(ctx.request.getParameter("refreshCount")) || 0;
 
         try {
+          /** @type {{ rule: ActionRule }} */
           const { rule } = require(`../${workflow}/${ruleName}`);
 
           const article = isArticle(entityId) ? entities.Article.findById(entityId) : null;
           const issue = !isArticle(entityId) ? entities.Issue.findById(entityId) : null;
           const currentUser = login ? entities.User.findByLogin(login) : null;
-          let input = null;
+          /** @type {SnippetUserInput | undefined} */
+          let input;
           rule.guard({ 
             article, 
             issue, 
             currentUser, 
-            setUserInput: (/** @type {any} */ value) => {
+            setUserInput: (value) => {
               input = value;
-            } 
+            },
+            refreshCount
           });
 
-          if (userInput && !input) {
+          if (input) {
+            input.enum = typeof input.enum === "function" ? input.enum({ article, issue, currentUser, refreshCount }) : input.enum;
+          }
+
+          if (!userInput && input?.required) {
             ctx.response.json({ input });
           } else {
-
             ctx.response.json({
               title: rule.title,
               content: rule.action({ article, issue, currentUser, userInput, refreshCount }),

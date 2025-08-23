@@ -7,7 +7,7 @@ A YouTrack widget that lets you embed markdown content from multiple sources (Is
 - __Static content__: embed markdown from any Issue or Knowledge Base Article
 - __Field/section selection__: choose any Text custom field and optionally a specific heading/section
 - __Dynamic snippets__: render workflow-defined scripts via `Snippet.forMarkdown`
-- __Snippet parameters__: supports enum parameters (dropdown) and free‑form text parameters (textarea)
+- __Snippet parameters__: supports enum parameters (dropdown) and free‑form text parameters (textarea). Enums can be arrays or dynamic resolvers (functions) based on context. Required inputs prompt the user when not provided.
 - __Live preview__: real-time preview of rendered content
 - __Mermaid + code highlighting__: supports diagram rendering and syntax highlighting
 - __Theme aware__: styles follow YouTrack light/dark themes
@@ -65,9 +65,12 @@ exports.rule = Snippet.forMarkdown({
   title: "Test snippet with parameter",
   name: "test-snippet",
   userInput: {
-  	type: "string",
-    enum: ["foo", "bar", "baz"],
-    description: "Select an option"
+    type: "string",
+    // Enum can be static or dynamic. A function receives context
+    // and returns the list of options based on Issue/Article, user, etc.
+    enum: (ctx) => ctx.issue ? ["critical", "major", "minor"] : ["public", "internal"],
+    description: "Select an option",
+    required: true
   },
   action: ({ issue, article, currentUser, userInput, refreshCount }) => {
     return [
@@ -81,6 +84,7 @@ exports.rule = Snippet.forMarkdown({
   }
 });
 ```
+When `userInput.required` is true and no value is provided, the widget prompts for input. The `enum` can be an array or a function that returns options based on the current context.
 
  > Due to YouTrack caching, workflow snippet updates may take some time to propagate.
  > Workaround: open `/markdown-snippet/backend-global.js`, make a tiny change (e.g., add whitespace at the end), and save. This forces the cache to refresh.
