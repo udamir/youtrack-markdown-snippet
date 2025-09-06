@@ -5,7 +5,6 @@ import Markdown from "@jetbrains/ring-ui-built/components/markdown/markdown"
 import Theme from "@jetbrains/ring-ui-built/components/global/theme.js"
 import MarkdownIt from "markdown-it"
 
-import { MERMAID_THEME_CONFIG } from "./markdown.config"
 import { useWidgetContext } from "../../contexts/WidgetContext"
 
 import "./renderer.css"
@@ -104,7 +103,6 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
         startOnLoad: false,
         theme: theme === Theme.DARK ? "dark" : "default",
         securityLevel: "loose",
-        themeVariables: MERMAID_THEME_CONFIG[theme],
       })
     }
   }, [theme])

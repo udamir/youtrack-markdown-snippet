@@ -72,26 +72,6 @@
   height: auto;
 }
 
-.markdown-snippet-content .mermaid .node rect,
-.markdown-snippet-content .mermaid .node circle,
-.markdown-snippet-content .mermaid .node ellipse,
-.markdown-snippet-content .mermaid .node polygon {
-  fill: var(--ring-code-background-color) !important;
-  stroke: var(--ring-borders-color) !important;
-}
-
-.markdown-snippet-content .mermaid .node .label,
-.markdown-snippet-content .mermaid .edgeLabel,
-.markdown-snippet-content .mermaid .cluster-label {
-  color: var(--ring-text-color) !important;
-  fill: var(--ring-text-color) !important;
-  font-family: var(--ring-font-family) !important;
-}
-
-.markdown-snippet-content .mermaid .edgePath .path {
-  stroke: var(--ring-text-color) !important;
-}
-
 /* Improve code block styling - use theme-aware colors */
 .markdown-snippet-content pre {
   background-color: var(--ring-code-background-color);

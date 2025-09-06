@@ -1,5 +1,10 @@
 # YouTrack Markdown Snippet
 
+## [1.5.1] - 2025-09-07
+
+### Bug Fixes
+- Fix Mermaid diagrams theme
+
 ## [1.5.0] - 2025-08-23
 
 ### New Features
