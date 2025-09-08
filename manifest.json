@@ -2,12 +2,12 @@
   "$schema": "https://json.schemastore.org/youtrack-app.json",
   "name": "markdown-snippet",
   "title": "Markdown Snippet widget",
-  "description": "This Widget allows you to embed content from different sources (issues, articles, custom scripts) directly into other YouTrack markdown",
+  "description": "This Widget allows you to embed content from different sources (issues, articles, custom scripts) into issues and articles",
   "vendor": {
     "name": "Damir Yusipov",
     "url": "https://github.com/udamir"
   },
-  "version": "1.5.1",
+  "version": "1.5.2",
   "icon": "icon.svg",
   "minYouTrackVersion": "2024.3.0",
   "changeNotes": "https://github.com/udamir/youtrack-markdown-snippet/releases",
@@ -19,7 +19,7 @@
       "indexPath": "markdown-widget/index.html",
       "extensionPoint": "MARKDOWN",
       "iconPath": "markdown-widget/icon.svg",
-      "description": "Embed content from different issues, articles or custom scripts directly into other YouTrack markdown",
+      "description": "Embed content from different issues, articles or custom scripts into issues and articles",
       "settingsSchemaPath": "markdown-widget/settings.json",
       "defaultDimensions": {
         "height": "480px",

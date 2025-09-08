@@ -3,7 +3,7 @@
   "description": "A YouTrack Widget that allows you to embed content from different sources (issues, articles, custom scripts) directly into other YouTrack markdown",
   "author": "Damir Yusipov",
   "private": true,
-  "version": "1.5.1",
+  "version": "1.5.2",
   "type": "module",
   "license": "MIT",
   "keywords": [

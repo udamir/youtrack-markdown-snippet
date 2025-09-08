@@ -78,14 +78,26 @@ export function getSectionContent(markdown: string, sectionTitle: string): strin
   return fullSectionContent.replace(/^#{1,6}\s+.+$/m, '').trim();
 }
 
-
 export function removeMarkdown(md: string): string {
   return md
-    .replace(/<[^>]*>/g, '') // remove HTML tags
-    .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
-    .replace(/\[([^\]]+)\]\((.*?)\)/g, '$1') // links: [text](url) → text
-    .replace(/(`{1,3})(.*?)\1/g, '$2') // inline or block code
-    .replace(/[*_~#>`-]/g, '') // basic formatting symbols
-    .replace(/\n{2,}/g, '\n') // collapse multiple newlines
+    .replace(/<[^>]*>/g, '')                            // remove HTML tags
+    .replace(/!\[.*?\]\(.*?\)/g, '')                    // remove images
+    .replace(/\[([^\]]+)\]\((.*?)\)/g, '$1')            // links: [text](url) → text
+    .replace(/(`{1,3})([\s\S]*?)\1/g, '$2')             // Inline or fenced code ticks (keep inner text)
+    .replace(/^\s{0,3}#{1,6}\s+/gm, '')                 // Headings at line start: remove leading # markers
+    .replace(/^(.*)\n\s*={2,}\s*$/gm, '$1')             // Setext-style headings: keep the text line, drop underline === or ---
+    .replace(/^(.*)\n\s*-{2,}\s*$/gm, '$1')             // Setext-style headings: keep the text line, drop underline === or ---
+    .replace(/^\s{0,3}>\s?/gm, '')                      // Blockquotes at line start: remove leading > markers
+    .replace(/^\s{0,3}(?:[*+-]|\d+\.)\s+/gm, '')        // Lists at line start: bullets or ordered
+    .replace(/\*{3}([^*]+)\*{3}/g, '$1')                // Strong+em combined (asterisks)
+    .replace(/(?<!\w)___([^_]+)___(?!\w)/g, '$1')       // Strong+em combined (underscores) with word-boundary protection
+    .replace(/\*\*([^*]+)\*\*/g, '$1')                  // Bold (asterisks)
+    .replace(/(?<!\w)__([^_]+)__(?!\w)/g, '$1')         // Bold (underscores) – avoid stripping underscores in words
+    .replace(/\*([^*]+)\*/g, '$1')                      // Italic (asterisk)
+    .replace(/(?<!\w)_([^_]+)_(?!\w)/g, '$1')           // Italic (underscore) – boundary-aware so part_of_word stays intact
+    .replace(/~~([^~]+)~~/g, '$1')                      // Strikethrough
+    .replace(/<((?:https?:\/\/|mailto:)[^>]+)>/g, '$1') // Autolinks <http://example.com> → keep inner content
+    .replace(/\\([\\`*_{}\[\]()#+\-.!>~|])/g, '$1')     // Unescape common escaped punctuation
+    .replace(/\n{2,}/g, '\n')                           // collapse multiple newlines
     .trim();
 }
