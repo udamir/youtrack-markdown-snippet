@@ -46,7 +46,8 @@ export const RendererComponent: FC<RendererProps> = memo(({ error = "", content,
       if (info === "mermaid") {
         const mermaidId = `mermaid-${Math.random().toString(36).substring(2, 9)}`
         // Keep original source in a data attribute to allow re-render on theme change
-        return `<div class="mermaid" id="${mermaidId}" data-original="${token.content}"></div>`
+        // Escape HTML to prevent issues with quotes and other special characters
+        return `<div class="mermaid" id="${mermaidId}" data-original="${escapeHtml(token.content)}"></div>`
       }
 
       // Handle regular code blocks with syntax highlighting
